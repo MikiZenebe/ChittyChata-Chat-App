@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
 import bodyParser from "body-parser";
+import errorMiddleware from "./middleware/errorMiddleware.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -21,6 +22,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
+
+//Error Middleware
+app.use(errorMiddleware);
 
 app.listen(PORT, () => {
   console.log(`Server running on port: ${PORT}`);
