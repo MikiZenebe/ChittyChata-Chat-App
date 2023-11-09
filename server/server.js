@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 5000;
 //Securty Package
 import helmet from "helmet";
 import dbConnection from "./utils/dbConfig.js";
+import router from "./routes/index.js";
 
 //Setups
 dotenv.config();
@@ -22,6 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
+app.use(router);
 
 //Error Middleware
 app.use(errorMiddleware);
