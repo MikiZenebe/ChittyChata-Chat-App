@@ -2,15 +2,15 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import { v4 as uuidv4 } from "uuid";
-import { hashString } from "./index";
-import Verification from "../models/EmailVerification";
+import { hashString } from "./index.js";
+import Verification from "../models/EmailVerification.js";
 
 dotenv.config();
 
 const { AUTH_EMAIL, AUTH_PASSWORD, APP_URL } = process.env;
 
 let transporter = nodemailer.createTransport({
-  host: "stmp-mail.outlook.com",
+  service: "gmail",
   auth: {
     user: AUTH_EMAIL,
     pass: AUTH_PASSWORD,
