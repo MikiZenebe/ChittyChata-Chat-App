@@ -1,12 +1,12 @@
-import User from "../models/User";
-import { compareString, createJWT, hashString } from "../utils/index";
-import { sendVerificationEmail } from "../utils/sendEmail";
+import User from "../models/User.js";
+import { compareString, createJWT, hashString } from "../utils/index.js";
+import { sendVerificationEmail } from "../utils/sendEmail.js";
 
 export const register = async (req, res, next) => {
   const { fullName, username, email, password } = req.body;
 
   //Validate fields
-  if (!fullName || username || email || password) {
+  if (!(fullName || username || email || password)) {
     next("Provide Required Fields");
     return;
   }
