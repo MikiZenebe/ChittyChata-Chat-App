@@ -20,7 +20,7 @@ export const verifyEmail = async (req, res) => {
                 const message = "Verification token has expired.";
                 res.redirect(`/users/verified?status=error&message=${message}`);
               })
-              .catch(() => {
+              .catch((err) => {
                 res.redirect(`/users/verified?status=error&message=`);
               });
           })
@@ -65,7 +65,7 @@ export const verifyEmail = async (req, res) => {
       res.redirect(`/users/verified?status=error&message=${message}`);
     }
   } catch (error) {
-    console.log(error);
-    res.redirect(`/users/verified?message=`);
+    console.error("Error in email verification:", error);
+    res.redirect(`/users/verified?status=error&message=An error occurred`);
   }
 };

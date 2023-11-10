@@ -20,7 +20,7 @@ let transporter = nodemailer.createTransport({
 export const sendVerificationEmail = async (user, res) => {
   const { _id, email, fullName } = user;
   const token = _id + uuidv4();
-  const link = APP_URL + "users/verify" + _id + "/" + token;
+  // const link = APP_URL + "users/verify/" + _id + "/" + token;
 
   //   mail options
   const mailOptions = {
@@ -37,13 +37,13 @@ export const sendVerificationEmail = async (user, res) => {
         <br>
     <p>This link <b>expires in 1 hour</b></p>
     <br>
-    <a href=${link}
+    <a href=${APP_URL + "users/verify/" + _id + "/" + token}
         style="color: #fff; padding: 14px; text-decoration: none; background-color: #000;  border-radius: 8px; font-size: 18px;">Verify
         Email Address</a>
     </p>
     <div style="margin-top: 20px;">
         <h5>Best Regards</h5>
-        <h5>ShareFun Team</h5>
+        <h5>WeShare Team</h5>
     </div>
 </div>`,
   };
