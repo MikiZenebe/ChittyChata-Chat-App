@@ -208,10 +208,10 @@ export const updateUser = async (req, res, next) => {
   try {
     const { fullName, location, profileUrl, username } = req.body;
 
-    if (!(fullName || location || username || contact)) {
-      next("Please provide all required fields");
-      return;
-    }
+    // if (!(fullName || location || username)) {
+    //   next("Please provide all required fields");
+    //   return;
+    // }
 
     const { userId } = req.body.user;
 
