@@ -4,7 +4,7 @@ import { TextInput, CustomButton } from "../components";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { SetTheme } from "../redux/theme";
-import { Logout } from "../redux/userSlice";
+import { Logout, updateProfile } from "../redux/userSlice";
 import { BsCardChecklist, BsSunFill } from "react-icons/bs";
 import {
   IoMdNotificationsOutline,
@@ -141,15 +141,21 @@ export default function TopBar() {
             </button>
           </div>
           <hr className="border-ascent-2" />
-          <p className="flex items-center gap-2">
+          <Link
+            to={`/profile/${user?._id}`}
+            className="flex items-center gap-2"
+          >
             <BsCardChecklist color="#258dee" />
             <span className="">My Profile</span>
-          </p>
+          </Link>
 
-          <p className="flex items-center gap-2">
+          <button
+            onClick={() => dispatch(updateProfile(true))}
+            className="flex items-center gap-2"
+          >
             <IoIosSettings color="#258dee" />
             <span className="">Settings</span>
-          </p>
+          </button>
 
           <p className="flex items-center gap-2">
             <IoMdHelp color="#258dee" />

@@ -131,7 +131,10 @@ export default function PostCard({ post, user, deletePost, likePost }) {
     setComments(postComments);
     setLoading(false);
   };
-  const handleLike = async () => {};
+  const handleLike = async (uri) => {
+    await likePost(uri);
+    await getComments(post?._id);
+  };
 
   return (
     <div
@@ -151,7 +154,7 @@ export default function PostCard({ post, user, deletePost, likePost }) {
           <div className="flex  justify-between items-center">
             <Link to={"/profile/" + post?.userId?._id}>
               <p className="font-medium text-lg text-ascent-1">
-                {post?.userId?.firstName} {post?.userId?.lastName}
+                {post?.userId?.fullName}
               </p>
             </Link>
 

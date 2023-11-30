@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   CustomButton,
   FriendsCard,
@@ -13,20 +13,23 @@ import { BiCheck } from "react-icons/bi";
 import { AiOutlineClose } from "react-icons/ai";
 import { useState } from "react";
 import { NoProfile } from "../assets";
-import { posts, requests, suggest } from "../assets/data";
+import { requests, suggest } from "../assets/data";
 import { Link } from "react-router-dom";
 import { BsPersonFillAdd } from "react-icons/bs";
 import { motion } from "framer-motion";
 import { cardAnim, pageAnimation } from "../animations";
+import { useEffect } from "react";
+import { fetchPosts, likePost } from "../utils";
 
 export default function Home() {
   const { user, edit } = useSelector((state) => state.user);
+  const { posts } = useSelector((state) => state.posts);
   const [modalOpen, setModalOpen] = useState(false);
   const [friendRequest, setFriendRequest] = useState(requests);
   const [suggestedFriends, setSuggestedFriends] = useState(suggest);
   const [errMsg, setErrMsg] = useState("");
-  const [posting, setPosting] = useState(false);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const openModal = () => {
     setModalOpen(true);
@@ -39,6 +42,30 @@ export default function Home() {
   const editModalClose = () => {
     setModalOpen(false);
   };
+
+  //Display Posts
+  const fetchPost = async () => {
+    await fetchPosts(user?.token, dispatch);
+    setLoading(false);
+  };
+  const handleLikePost = async (uri) => {
+    await likePost({ uri: uri, token: user?.token });
+
+    await fetchPost();
+  };
+  const handleDelete = async () => {};
+  const fetchFriendRequests = async () => {};
+  const fetchSuggestedFriends = async () => {};
+  const acceptFriendRequest = async () => {};
+  const getUser = async () => {};
+
+  useEffect(() => {
+    setLoading(true);
+    getUser();
+    fetchPost();
+    fetchFriendRequests();
+    fetchSuggestedFriends();
+  }, []);
 
   return (
     <motion.div
@@ -99,8 +126,8 @@ export default function Home() {
                 key={post?._id}
                 post={post}
                 user={user}
-                deletePost={() => {}}
-                likePost={() => {}}
+                deletePost={handleDelete}
+                likePost={handleLikePost}
               />
             ))
           ) : (
@@ -212,7 +239,9 @@ export default function Home() {
           </motion.div>
         </div>
       </div>
-      {modalOpen && <CreatePostModal onClose={closeModal} />}
+      {modalOpen && (
+        <CreatePostModal fetchPost={fetchPost()} onClose={closeModal} />
+      )}
       {edit && <EditProfile onClose={editModalClose} />}
     </motion.div>
   );

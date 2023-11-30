@@ -1,5 +1,6 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineClose } from "react-icons/ai";
 import { CustomButton, Loading, TextInput } from "../components";
 import { BsFiletypeGif } from "react-icons/bs";
@@ -7,11 +8,14 @@ import { BiImages, BiSolidVideo, BiFile } from "react-icons/bi";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import { card } from "../animations/index";
+import { apiRequest, handleFileUpload } from "../utils";
 
-export default function PostModal({ onClose }) {
+export default function PostModal({ onClose, fetchPost }) {
   const { user, edit } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const [posting, setPosting] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const [file, setFile] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(true);
   const modalRef = useRef();
 
@@ -40,10 +44,41 @@ export default function PostModal({ onClose }) {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
-  const handlePostSubmit = async (data) => {};
+  const handlePostSubmit = async (data) => {
+    setPosting(true);
+    setErrMsg("");
+
+    try {
+      const uri = file && (await handleFileUpload(file));
+      const newData = uri ? { ...data, image: uri } : data;
+
+      const res = await apiRequest({
+        url: "/posts/create-post",
+        data: newData,
+        token: user?.token,
+        method: "POST",
+      });
+
+      if (res?.status === "failed") {
+        setErrMsg(res);
+      } else {
+        reset({
+          description: "",
+        });
+        setFile(null);
+        setErrMsg("");
+        await fetchPost();
+      }
+      setPosting(false);
+    } catch (error) {
+      console.log(error);
+      setPosting(false);
+    }
+  };
 
   return (
     <div
@@ -72,8 +107,8 @@ export default function PostModal({ onClose }) {
                 />
 
                 <span>
-                  <p className="text-ascent-1">{user.firstName}</p>
-                  <p className="text">{user.profession ?? "No Profession"}</p>
+                  <p className="text-ascent-1">{user.fullName}</p>
+                  <p className="text">@{user.username ?? "No Profession"}</p>
                 </span>
               </div>
               <span onClick={closeModal}>

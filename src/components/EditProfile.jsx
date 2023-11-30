@@ -3,8 +3,9 @@ import { CustomButton, Loading, TextInput } from "../components";
 import { useForm } from "react-hook-form";
 import { AiOutlineClose } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { updateProfile } from "../redux/userSlice";
+import { UserLogin, updateProfile } from "../redux/userSlice";
 import { BiImages } from "react-icons/bi";
+import { apiRequest, handleFileUpload } from "../utils";
 
 export default function EditProfile() {
   const { user } = useSelector((state) => state.user);
@@ -23,7 +24,43 @@ export default function EditProfile() {
     defaultValues: { ...user },
   });
 
-  const onSubmit = async (data) => {};
+  const onSubmit = async (data) => {
+    setIsSubmitting(false);
+    setErrMsg("");
+
+    try {
+      const uri = picture && (await handleFileUpload(picture));
+      const { fullName, username, location } = data;
+
+      const res = await apiRequest({
+        url: "/users/update-user",
+        data: {
+          fullName,
+          username,
+          location,
+          profileUrl: uri ? uri : user?.profileUrl,
+        },
+        method: "PUT",
+        token: user?.token,
+      });
+
+      if (res?.status === "failed") {
+        setErrMsg(res);
+      } else {
+        setErrMsg("");
+        const newUser = { token: res?.token, ...res?.user };
+        dispatch(UserLogin(newUser));
+
+        setTimeout(() => {
+          dispatch(updateProfile(false));
+        }, 3000);
+      }
+      setIsSubmitting(false);
+    } catch (error) {
+      console.log(error);
+      setIsSubmitting(false);
+    }
+  };
 
   const handleClose = () => {
     dispatch(updateProfile(false));

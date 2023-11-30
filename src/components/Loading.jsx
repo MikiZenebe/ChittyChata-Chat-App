@@ -1,9 +1,13 @@
-import loading from "../assets/loading.gif";
-
-export default function Loading() {
+const Loading = () => {
   return (
-    <div>
-      <img src={loading} className="w-20" alt="" />
+    <div className="dots-container">
+      <div className="dot"></div>
+      <div className="dot"></div>
+      <div className="dot"></div>
+      <div className="dot"></div>
+      <div className="dot"></div>
     </div>
   );
-}
+};
+
+export default Loading;

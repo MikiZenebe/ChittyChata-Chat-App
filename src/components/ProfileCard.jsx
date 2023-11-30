@@ -22,49 +22,48 @@ export default function ProfileCard({ user }) {
       className="w-full bg-primary  flex flex-col items-center rounded-xl px-6 py-4"
     >
       <div className="w-full flex items-center justify-between border-b border-[#66666645] pb-5 ">
-        <Link to={`/profile/${user?._id}`} className="flex gap-2">
+        <Link to={`/profile/${user?._id}`}>
           <img
             src={user?.profileUrl ?? NoProfile}
             alt={user?.email}
             className="w-14 h-14 object-cover rounded-full"
           />
+        </Link>
 
-          <div className="flex flex-col justify-center">
-            <div className="flex lg:gap-12 md:gap-20 items-center">
-              <div>
-                {" "}
-                <p className="text-lg font-medium text-ascent-1 flex items-center gap-3">
-                  {user?.firstName} {user?.lastName}
-                  <span className="text-base text-blue">
-                    {user?.verified ? (
-                      <IoMdCheckmark
-                        size={15}
-                        className="bg-[#258dee] rounded-full p-0.5 text-white font-bold"
-                      />
-                    ) : (
-                      ""
-                    )}
-                  </span>
-                </p>
-                <span className="text-ascent-2">
-                  {user?.profession ?? "@miki_zenebe"}
+        <div className="flex flex-col justify-center">
+          <div className="flex lg:gap-16 md:gap-20 items-center">
+            <Link to={`/profile/${user?._id}`}>
+              <p className="text-md font-medium text-ascent-1 flex items-center gap-3">
+                {user?.fullName}
+                <span className="text-base text-blue">
+                  {user?.verified ? (
+                    <IoMdCheckmark
+                      size={15}
+                      className="bg-[#258dee] rounded-full p-0.5 text-white font-bold"
+                    />
+                  ) : (
+                    ""
+                  )}
                 </span>
-              </div>
+              </p>
+              <span className="text-ascent-2">
+                @{user?.username ?? "no username"}
+              </span>
+            </Link>
 
-              <div>
-                {user?._id === data?._id ? (
-                  <button onClick={() => dispatch(updateProfile(true))}>
-                    <IoMdSettings size={20} color="#258dee" cursor="pointer" />
-                  </button>
-                ) : (
-                  <button>
-                    <IoIosPersonAdd size={20} color="#258dee" />
-                  </button>
-                )}
-              </div>
+            <div>
+              {user?._id === data?._id ? (
+                <button onClick={() => dispatch(updateProfile(true))}>
+                  <IoMdSettings size={20} color="#258dee" cursor="pointer" />
+                </button>
+              ) : (
+                <button>
+                  <IoIosPersonAdd size={20} color="#258dee" />
+                </button>
+              )}
             </div>
           </div>
-        </Link>
+        </div>
       </div>
 
       <div className="w-full flex flex-col gap-2 py-4 border-b border-[#66666645]">
@@ -80,7 +79,7 @@ export default function ProfileCard({ user }) {
 
         <div className="flex items-center justify-between">
           <span className="text-ascent-2">Location</span>
-          <span>{user?.location ?? "Dessie"}</span>
+          <span className="text-ascent-1">{user?.location ?? "Dessie"}</span>
         </div>
 
         <div className="flex items-center justify-between">

@@ -1,16 +1,17 @@
 import TextInput from "../components/TextInput";
-import { BsShare } from "react-icons/bs";
-import { ImConnection } from "react-icons/im";
-import { AiOutlineInteraction } from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import Logo from "../assets/Logo.png";
-import BgImg from "../assets/img.jpeg";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Loading, CustomButton } from "../components/index";
+import { apiRequest } from "../utils";
 
 export default function Register() {
+  const [errMsg, setErrMsg] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const dispatch = useDispatch();
+
   const {
     register,
     getValues,
@@ -18,11 +19,31 @@ export default function Register() {
     formState: { errors },
   } = useForm({ mode: "onChange" });
 
-  const onSubmit = async (data) => {};
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
 
-  const [errMsg, setErrMsg] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const dispatch = useDispatch();
+    try {
+      const res = await apiRequest({
+        url: "/auth/register",
+        data: data,
+        method: "POST",
+      });
+
+      if (res?.status === "failed") {
+        setErrMsg(res);
+      } else {
+        setErrMsg(res);
+        setTimeout(() => {
+          window.location.replace("/login");
+        }, 5000);
+      }
+
+      setIsSubmitting(false);
+    } catch (error) {
+      console.log(error);
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="bg-bgColor w-full h-[100vh] flex items-center justify-center p-6">
@@ -60,15 +81,15 @@ export default function Register() {
               />
 
               <TextInput
-                name="userName"
+                name="username"
                 placeholder="User Name"
                 label="User Name"
                 type="text"
-                register={register("userName", {
+                register={register("username", {
                   required: "User Name do not match",
                 })}
                 styles="w-full  p-2 border"
-                error={errors.userName ? errors.userName.message : ""}
+                error={errors.username ? errors.username.message : ""}
               />
             </div>
             <TextInput

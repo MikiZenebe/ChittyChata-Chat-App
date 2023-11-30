@@ -1,14 +1,12 @@
 import TextInput from "../components/TextInput";
-import { BsShare } from "react-icons/bs";
-import { ImConnection } from "react-icons/im";
-import { AiOutlineInteraction } from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import Logo from "../assets/Logo.png";
-import BgImg from "../assets/img.jpeg";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Loading, CustomButton } from "../components/index";
+import { apiRequest } from "../utils";
+import { UserLogin } from "../redux/userSlice";
 
 export default function Login() {
   const {
@@ -17,7 +15,32 @@ export default function Login() {
     formState: { errors },
   } = useForm({ mode: "onChange" });
 
-  const onSubmit = async (data) => {};
+  const onSubmit = async (data) => {
+    try {
+      const res = await apiRequest({
+        url: "/auth/login",
+        data: data,
+        method: "POST",
+      });
+
+      if (res?.status === "failed") {
+        setErrMsg(res);
+      } else {
+        setErrMsg(res);
+
+        const newData = { token: res?.token, ...res?.user };
+        dispatch(UserLogin(newData));
+        setTimeout(() => {
+          window.location.replace("/");
+        }, 5000);
+      }
+
+      setIsSubmitting(false);
+    } catch (error) {
+      console.log(error);
+      setIsSubmitting(false);
+    }
+  };
 
   const [errMsg, setErrMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -73,13 +96,6 @@ export default function Login() {
               labelStyles="ml-2"
               error={errors.password ? errors.password.message : ""}
             />
-
-            <Link
-              to="/reset-password"
-              className="text-sm text-right text-[#258dee] font-semibold"
-            >
-              Forgot Password?
-            </Link>
 
             {errMsg?.message && (
               <span
