@@ -107,14 +107,14 @@ export default function EditProfile() {
               />
 
               <TextInput
-                label="Username"
+                label="username"
                 placeholder="User Name"
                 type="text"
                 styles="w-full rounded-lg p-2 bg-primary border"
-                register={register("userName", {
+                register={register("username", {
                   required: "User Name do no match",
                 })}
-                error={errors.lastName ? errors.lastName?.message : ""}
+                error={errors.username ? errors.username?.message : ""}
               />
 
               <TextInput

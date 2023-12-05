@@ -9,10 +9,10 @@ import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import { card } from "../animations/index";
 import { apiRequest, handleFileUpload } from "../utils";
+import toast from "react-hot-toast";
 
 export default function PostModal({ onClose, fetchPost }) {
-  const { user, edit } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
   const [posting, setPosting] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [file, setFile] = useState(null);
@@ -64,13 +64,18 @@ export default function PostModal({ onClose, fetchPost }) {
       });
 
       if (res?.status === "failed") {
-        setErrMsg(res);
+        toast.error(res, {
+          duration: 1500,
+        });
       } else {
         reset({
           description: "",
         });
         setFile(null);
-        setErrMsg("");
+        toast.success("Your post created successfully 🚀🚀", {
+          duration: 1500,
+        });
+        onClose();
         await fetchPost();
       }
       setPosting(false);

@@ -13,20 +13,20 @@ import { BiCheck } from "react-icons/bi";
 import { AiOutlineClose } from "react-icons/ai";
 import { useState } from "react";
 import { NoProfile } from "../assets";
-import { requests, suggest } from "../assets/data";
 import { Link } from "react-router-dom";
 import { BsPersonFillAdd } from "react-icons/bs";
 import { motion } from "framer-motion";
 import { cardAnim, pageAnimation } from "../animations";
 import { useEffect } from "react";
-import { fetchPosts, likePost } from "../utils";
+import { apiRequest, deletePost, fetchPosts, likePost } from "../utils";
+import toast from "react-hot-toast";
 
 export default function Home() {
   const { user, edit } = useSelector((state) => state.user);
   const { posts } = useSelector((state) => state.posts);
   const [modalOpen, setModalOpen] = useState(false);
-  const [friendRequest, setFriendRequest] = useState(requests);
-  const [suggestedFriends, setSuggestedFriends] = useState(suggest);
+  const [friendRequest, setFriendRequest] = useState([]);
+  const [suggestedFriends, setSuggestedFriends] = useState([]);
   const [errMsg, setErrMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -53,9 +53,37 @@ export default function Home() {
 
     await fetchPost();
   };
-  const handleDelete = async () => {};
-  const fetchFriendRequests = async () => {};
-  const fetchSuggestedFriends = async () => {};
+  const handleDelete = async (id) => {
+    await deletePost(id, user.token);
+    toast.success("Your post deleted successfully 🚮", {
+      duration: 1500,
+    });
+    await fetchPost();
+  };
+  const fetchFriendRequests = async () => {
+    try {
+      const res = await apiRequest({
+        url: "/users/get-friend-request",
+        token: user?.token,
+        method: "POST",
+      });
+      setFriendRequest(res?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const fetchSuggestedFriends = async () => {
+    try {
+      const res = await apiRequest({
+        url: "/users/suggested-friends",
+        token: user?.token,
+        method: "POST",
+      });
+      setSuggestedFriends(res?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const acceptFriendRequest = async () => {};
   const getUser = async () => {};
 
@@ -133,7 +161,7 @@ export default function Home() {
           ) : (
             <div className="flex w-full h-full items-center justify-center">
               <p className="text-lg text-ascent-2 flex flex-col items-center">
-                <span className="text-[500%]">😢</span>
+                <span className="text-[500%] animate-bounce">😢</span>
                 <span className="mt-12 text-2xl">No Post Available</span>
               </p>
             </div>
@@ -212,15 +240,15 @@ export default function Home() {
                   >
                     <img
                       src={friend?.profileUrl ?? NoProfile}
-                      alt={friend?.firstName}
+                      alt={friend?.fullName}
                       className="w-10 h-10 object-cover rounded-full"
                     />
                     <div className="flex-1 ">
                       <p className="text-base font-medium text-ascent-1">
-                        {friend?.firstName} {friend?.lastName}
+                        {friend?.fullName}
                       </p>
                       <span className="text-sm text-ascent-2">
-                        {friend?.profession ?? "No Profession"}
+                        @{friend?.username ?? "No Username"}
                       </span>
                     </div>
                   </Link>

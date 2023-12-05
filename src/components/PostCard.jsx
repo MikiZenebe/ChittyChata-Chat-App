@@ -202,13 +202,16 @@ export default function PostCard({ post, user, deletePost, likePost }) {
 
       <div className="mt-2 flex justify-between items-center px-3 py-2 text-ascent-2 text-base">
         <div className="flex items-center gap-6">
-          <p className="flex gap-1 items-center text-base cursor-pointer">
+          <p
+            className="flex gap-1 items-center text-base cursor-pointer"
+            onClick={() => handleLike(`/posts/like/${post?._id}`)}
+          >
             {post?.likes?.includes(user?._id) ? (
               <BiSolidHeart size={20} color="red" />
             ) : (
               <BiHeart size={20} />
             )}
-            {post?.likes?.length}
+            <span>{post?.likes?.length}</span>
           </p>
 
           <p
@@ -225,9 +228,9 @@ export default function PostCard({ post, user, deletePost, likePost }) {
           {user?._id === post?.userId?._id && (
             <div
               onClick={() => deletePost(post?._id)}
-              className="flex gap-1 items-center text-base text-ascent-2 cursor-pointer"
+              className="flex gap-1 items-center text-base text-ascent-2 cursor-pointer "
             >
-              <MdOutlineDeleteOutline size={20} />
+              <MdOutlineDeleteOutline size={20} className="hover:text-[red]" />
             </div>
           )}
         </div>
