@@ -85,9 +85,9 @@ export const deletePost = async (id, token) => {
   }
 };
 
-export const getUserInfo = async (id, token) => {
+export const getUserInfo = async (token, id) => {
   try {
-    const uri = id === undefined ? "/users/get-user" : "/users/get-user/" + id;
+    const uri = id === undefined ? "/users/get-user" : "/users/get-user" + id;
 
     const res = await apiRequest({
       url: uri,

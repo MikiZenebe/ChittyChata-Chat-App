@@ -3,6 +3,7 @@ import { NoProfile } from "../assets";
 import { motion } from "framer-motion";
 
 export default function FriendsCard({ friends }) {
+  console.log(friends);
   return (
     <div>
       <motion.div
@@ -19,7 +20,7 @@ export default function FriendsCard({ friends }) {
         </div>
 
         <div className="w-full flex flex-col gap-4 pt-4">
-          {friends.map((friend) => (
+          {friends?.map((friend) => (
             <Link
               to={`/profile/${friend._id}`}
               key={friend._id}
@@ -27,15 +28,17 @@ export default function FriendsCard({ friends }) {
             >
               <img
                 src={friend?.profileUrl ?? NoProfile}
-                alt={friend?.firstName}
+                alt={friend?.fullName}
                 className="w-10 h-10 object-cover rounded-full"
               />
 
               <div className="flex-1">
                 <p className="text-base font-medium text-ascent-1">
-                  {friend.firstName} {friend.lastName}
+                  {friend.fullName}
                 </p>
-                <span className="text-sm text-ascent-2">@username</span>
+                <span className="text-sm text-ascent-2">
+                  @{friend.username}
+                </span>
               </div>
             </Link>
           ))}

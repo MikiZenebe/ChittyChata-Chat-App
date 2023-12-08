@@ -1,14 +1,16 @@
 import TextInput from "../components/TextInput";
 import { useForm } from "react-hook-form";
 import Logo from "../assets/Logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Loading, CustomButton } from "../components/index";
 import { apiRequest } from "../utils";
 import { UserLogin } from "../redux/userSlice";
+import ErrorModal from "../components/ErrorModal";
 
 export default function Login() {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -31,11 +33,10 @@ export default function Login() {
         const newData = { token: res?.token, ...res?.user };
         dispatch(UserLogin(newData));
         setTimeout(() => {
-          window.location.replace("/");
-        }, 5000);
+          navigate("/");
+          setIsSubmitting(true);
+        }, 3000);
       }
-
-      setIsSubmitting(false);
     } catch (error) {
       console.log(error);
       setIsSubmitting(false);
@@ -98,13 +99,14 @@ export default function Login() {
             />
 
             {errMsg?.message && (
-              <span
-                className={`text-lg ${
-                  errMsg === "failed" ? "text-[#f64949fe]" : "text-[#2ba150fe]"
-                }`}
-              >
-                {errMsg?.message}
-              </span>
+              <ErrorModal error={errMsg?.message} />
+              // <span
+              //   className={`text-lg bg-[red] w-auto absolute ${
+              //     errMsg === "failed" ? "text-[#f64949fe]" : "text-[#2ba150fe]"
+              //   }`}
+              // >
+              //   {errMsg?.message}
+              // </span>
             )}
 
             {isSubmitting ? (

@@ -18,8 +18,16 @@ import { BsPersonFillAdd } from "react-icons/bs";
 import { motion } from "framer-motion";
 import { cardAnim, pageAnimation } from "../animations";
 import { useEffect } from "react";
-import { apiRequest, deletePost, fetchPosts, likePost } from "../utils";
+import {
+  apiRequest,
+  deletePost,
+  fetchPosts,
+  getUserInfo,
+  likePost,
+  sendFriendRequest,
+} from "../utils";
 import toast from "react-hot-toast";
+import { UserLogin } from "../redux/userSlice";
 
 export default function Home() {
   const { user, edit } = useSelector((state) => state.user);
@@ -84,8 +92,35 @@ export default function Home() {
       console.log(error);
     }
   };
-  const acceptFriendRequest = async () => {};
-  const getUser = async () => {};
+  const handleFriendRequest = async (id) => {
+    try {
+      const res = await sendFriendRequest(user.token, id);
+      await fetchSuggestedFriends();
+    } catch (error) {
+      console.log(error);
+    }
+    toast.success("Request sent successfully ✅✅", {
+      duration: 1500,
+    });
+  };
+  const acceptFriendRequest = async (id, status) => {
+    try {
+      const res = await apiRequest({
+        url: "/users/accept-request",
+        token: user?.token,
+        method: "POST",
+        data: { rid: id, status },
+      });
+      setFriendRequest(res?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getUser = async () => {
+    const res = await getUserInfo(user?.token);
+    const newData = { token: user?.token, ...res };
+    dispatch(UserLogin(newData));
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -189,15 +224,15 @@ export default function Home() {
                   >
                     <img
                       src={from?.profileUrl ?? NoProfile}
-                      alt={from?.firstName}
+                      alt={from?.fullName}
                       className="w-10 h-10 object-cover rounded-full"
                     />
                     <div className="flex-1">
                       <p className="text-base font-medium text-ascent-1">
-                        {from?.firstName} {from?.lastName}
+                        {from?.fullName}
                       </p>
                       <span className="text-sm text-ascent-2">
-                        {from?.profession ?? "No Profession"}
+                        @{from?.username ?? "No Username"}
                       </span>
                     </div>
                   </Link>
@@ -205,11 +240,28 @@ export default function Home() {
                   <div className="flex gap-3">
                     <BiCheck
                       size={25}
-                      className="bg-[#258dee] text-white rounded-full"
+                      onClick={() =>
+                        acceptFriendRequest(
+                          _id,
+                          "Accepted",
+                          toast.success("Request Accepted ✅✅", {
+                            duration: 1500,
+                          })
+                        )
+                      }
+                      className="bg-[#258dee] text-white rounded-full cursor-pointer"
                     />
                     <AiOutlineClose
+                      onClick={() =>
+                        acceptFriendRequest(
+                          _id,
+                          toast.error("Request Denied ❌❌", {
+                            duration: 1500,
+                          })
+                        )
+                      }
                       size={25}
-                      className="border border-[#959595] text-[#959595] rounded-full p-1"
+                      className="border border-[#959595] text-[#959595] rounded-full p-1 cursor-pointer"
                     />
                   </div>
                 </div>
@@ -256,7 +308,7 @@ export default function Home() {
                   <div className="flex gap-1">
                     <button
                       className="bg-[#258dee] text-sm text-white p-1 rounded"
-                      onClick={() => {}}
+                      onClick={() => handleFriendRequest(friend._id)}
                     >
                       <BsPersonFillAdd size={20} className="text-white p-0.5" />
                     </button>
