@@ -3,7 +3,6 @@ import { NoProfile } from "../assets";
 import { motion } from "framer-motion";
 
 export default function FriendsCard({ friends }) {
-  console.log(friends);
   return (
     <div>
       <motion.div
