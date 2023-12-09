@@ -27,21 +27,21 @@ export const apiRequest = async ({ url, token, data, method }) => {
   }
 };
 
-export const handleFileUpload = async (uploadFile) => {
-  const formData = new FormData();
-  formData.append("file", uploadFile);
-  formData.append("upload_preset", "socialmedia");
+// export const handleFileUpload = async (uploadFile) => {
+//   const formData = new FormData();
+//   formData.append("file", uploadFile);
+//   formData.append("upload_preset", "socialmedia");
 
-  try {
-    const response = await axios.post(
-      `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_ID}`,
-      formData
-    );
-    return response.data.secure_url;
-  } catch (error) {
-    console.log(error);
-  }
-};
+//   try {
+//     const response = await axios.post(
+//       `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_ID}`,
+//       formData
+//     );
+//     return response.data.secure_url;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 export const fetchPosts = async (token, dispatch, uri, data) => {
   try {
@@ -87,7 +87,7 @@ export const deletePost = async (id, token) => {
 
 export const getUserInfo = async (token, id) => {
   try {
-    const uri = id === undefined ? "/users/get-user" : "/users/get-user" + id;
+    const uri = id === undefined ? "/users/get-user" : "/users/get-user/" + id;
 
     const res = await apiRequest({
       url: uri,

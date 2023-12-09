@@ -7,7 +7,7 @@ import { BiComment, BiHeart, BiSolidHeart, BiShare } from "react-icons/bi";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { TextInput, CustomButton, Loading } from "../components";
 import { useForm } from "react-hook-form";
-import { postComments } from "../assets/data";
+import { apiRequest } from "../utils";
 
 const ReplyCard = ({ reply, user, handleLike }) => {
   return (
@@ -41,7 +41,7 @@ const ReplyCard = ({ reply, user, handleLike }) => {
             onClick={handleLike}
           >
             {reply?.likes?.includes(user?._id) ? (
-              <BiSolidHeart size={20} color="blue" />
+              <BiSolidHeart size={20} color="red" />
             ) : (
               <BiHeart size={20} />
             )}
@@ -65,7 +65,43 @@ const CommentForm = ({ user, id, replyAt, getComments }) => {
     mode: "onChange",
   });
 
-  const onSubmit = async (data) => {};
+  const onSubmit = async (data) => {
+    setLoading(true);
+    setErrMsg("");
+
+    try {
+      const URL = !replyAt
+        ? "/posts/comment/" + id
+        : "/posts/reply-comment/" + id;
+
+      const newData = {
+        comment: data?.comment,
+        from: user?.fullName,
+        replyAt: replyAt,
+      };
+
+      const res = await apiRequest({
+        url: URL,
+        data: newData,
+        token: user?.token,
+        method: "POST",
+      });
+
+      if (res?.status === "failed") {
+        setErrMsg(res);
+      } else {
+        reset({
+          comment: "",
+        });
+        setErrMsg("");
+        await getComments();
+      }
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full">
@@ -126,9 +162,23 @@ export default function PostCard({ post, user, deletePost, likePost }) {
   const [replyComments, setReplyComments] = useState(0);
   const [showComments, setShowComments] = useState(0);
 
-  const getComments = async () => {
+  const getPostComments = async (id) => {
+    try {
+      const res = await apiRequest({
+        url: "/posts/comments/" + id,
+        method: "GET",
+      });
+      return res?.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getComments = async (id) => {
     setReplyComments(0);
-    setComments(postComments);
+
+    const result = await getPostComments(id);
+    setComments(result);
     setLoading(false);
   };
   const handleLike = async (uri) => {
@@ -258,14 +308,14 @@ export default function PostCard({ post, user, deletePost, likePost }) {
                   <Link to={"/profile/" + comment?.userId?._id}>
                     <img
                       src={comment?.userId?.profileUrl ?? NoProfile}
-                      alt={comment?.userId?.firstName}
+                      alt={comment?.userId?.fullName}
                       className="w-10 h-10 rounded-full object-cover"
                     />
                   </Link>
                   <div>
                     <Link to={"/profile/" + comment?.userId?._id}>
                       <p className="font-medium text-base text-ascent-1">
-                        {comment?.userId?.firstName} {comment?.userId?.lastName}
+                        {comment?.userId?.fullName}
                       </p>
                     </Link>
                     <span className="text-ascent-2 text-sm">
@@ -278,7 +328,12 @@ export default function PostCard({ post, user, deletePost, likePost }) {
                   <p className="text-ascent-2">{comment?.comment}</p>
 
                   <div className="mt-2 flex gap-6">
-                    <p className="flex gap-2 items-center text-base text-ascent-2 cursor-pointer">
+                    <p
+                      className="flex gap-2 items-center text-base text-ascent-2 cursor-pointer"
+                      onClick={() => {
+                        handleLike("/posts/like-comment/" + comment?._id);
+                      }}
+                    >
                       {comment?.likes?.includes(user?._id) ? (
                         <BiSolidHeart size={20} color="red" />
                       ) : (
@@ -330,9 +385,10 @@ export default function PostCard({ post, user, deletePost, likePost }) {
                         key={reply?._id}
                         handleLike={() =>
                           handleLike(
-                            `/posts/like-comments/${comment?._id}${"/"}${
+                            "/posts/like-comment/" +
+                              comment?._id +
+                              "/" +
                               reply?._id
-                            }`
                           )
                         }
                       />
@@ -342,7 +398,7 @@ export default function PostCard({ post, user, deletePost, likePost }) {
             ))
           ) : (
             <span className="flex text-sm py-4 text-ascent-2 text-center">
-              No Comments, be first to comment
+              No Comments, be first to comment 😊
             </span>
           )}
         </div>

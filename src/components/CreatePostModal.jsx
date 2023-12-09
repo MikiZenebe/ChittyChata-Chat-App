@@ -8,7 +8,7 @@ import { BiImages, BiSolidVideo, BiFile } from "react-icons/bi";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import { card } from "../animations/index";
-import { apiRequest, handleFileUpload } from "../utils";
+import { apiRequest } from "../utils";
 import toast from "react-hot-toast";
 
 export default function PostModal({ onClose, fetchPost }) {
@@ -53,12 +53,9 @@ export default function PostModal({ onClose, fetchPost }) {
     setErrMsg("");
 
     try {
-      const uri = file && (await handleFileUpload(file));
-      const newData = uri ? { ...data, image: uri } : data;
-
       const res = await apiRequest({
         url: "/posts/create-post",
-        data: newData,
+        data: data,
         token: user?.token,
         method: "POST",
       });

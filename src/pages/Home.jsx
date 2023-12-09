@@ -16,7 +16,7 @@ import { NoProfile } from "../assets";
 import { Link } from "react-router-dom";
 import { BsPersonFillAdd } from "react-icons/bs";
 import { motion } from "framer-motion";
-import { cardAnim, pageAnimation } from "../animations";
+import { pageAnimation } from "../animations";
 import { useEffect } from "react";
 import {
   apiRequest,

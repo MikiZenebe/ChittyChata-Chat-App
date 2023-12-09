@@ -32,10 +32,9 @@ export default function Login() {
 
         const newData = { token: res?.token, ...res?.user };
         dispatch(UserLogin(newData));
-        setTimeout(() => {
-          navigate("/");
-          setIsSubmitting(true);
-        }, 3000);
+
+        navigate("/");
+        setIsSubmitting(true);
       }
     } catch (error) {
       console.log(error);

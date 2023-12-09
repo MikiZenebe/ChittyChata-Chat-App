@@ -9,12 +9,10 @@ import { BsCardChecklist, BsSunFill } from "react-icons/bs";
 import {
   IoMdNotificationsOutline,
   IoIosSettings,
-  IoMdMoon,
   IoMdHelp,
 } from "react-icons/io";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { card } from "../animations";
 
 export default function TopBar() {
   const modalRef = useRef();
@@ -107,7 +105,7 @@ export default function TopBar() {
             )}
           </button>
         </div>
-        <h1 className="text-ascent-2 font-medium">Miki Zenebe</h1>
+        <h1 className="text-ascent-2 font-medium">{user.fullName}</h1>
         <div ref={modalRef} className="cursor-pointer">
           <img
             src={Logo}

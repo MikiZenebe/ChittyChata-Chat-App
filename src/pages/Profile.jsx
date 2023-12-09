@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import {
@@ -8,7 +8,7 @@ import {
   ProfileCard,
   TopBar,
 } from "../components";
-import { posts } from "../assets/data";
+import { deletePost, fetchPosts, getUserInfo, likePost } from "../utils";
 
 export default function Profile() {
   const { id } = useParams();
@@ -18,8 +18,32 @@ export default function Profile() {
   const [userInfo, setUserInfo] = useState(user);
   const [loading, setLoading] = useState(false);
 
-  const handleDelete = () => {};
-  const handleLikePost = () => {};
+  const uri = "/posts/get-user-post/" + id;
+
+  const getUser = async () => {
+    const res = await getUserInfo(user?.token, id);
+    setUserInfo(res);
+  };
+
+  const getPosts = async () => {
+    await fetchPosts(user?.token, dispatch, uri);
+    setLoading(false);
+  };
+
+  const handleDelete = async (id) => {
+    await deletePost(id, user.token);
+    await getPosts();
+  };
+  const handleLikePost = async (uri) => {
+    await likePost({ uri: uri, token: user?.token });
+    await getPosts();
+  };
+
+  useEffect(() => {
+    setLoading(false);
+    getUser();
+    getPosts();
+  }, [id]);
 
   return (
     <>
@@ -52,7 +76,7 @@ export default function Profile() {
             ) : (
               <div className="flex w-full h-full items-center justify-center">
                 <p className="text-lg text-ascent-2 flex flex-col items-center">
-                  <span className="text-[500%]">😢</span>
+                  <span className="text-[500%] animate-bounce">😢</span>
                   <span className="mt-12 text-2xl">No Post Available</span>
                 </p>
               </div>
