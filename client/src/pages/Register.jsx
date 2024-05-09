@@ -1,13 +1,48 @@
 import { Link } from "react-router-dom";
 import Logo from "../assets/logo.svg";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { registerRoute } from "../utils/ApiRoutes";
 
 export default function Register() {
-  const handleSubmit = (e) => {
+  const [values, setValues] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("form");
+    if (handleValidation()) {
+      const { username, email, password } = values;
+      const { data } = await axios.post(registerRoute, {
+        username,
+        email,
+        password,
+      });
+    }
   };
 
-  const handleChange = (e) => {};
+  const handleChange = (e) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
+
+  const handleValidation = () => {
+    const { password, confirmPassword, username } = values;
+    if (password !== confirmPassword) {
+      toast.error("Password and confirm password should be same ⚠");
+      return false;
+    } else if (username.length < 3) {
+      toast.error("Username should be greater than 3 chars ⚠");
+      return false;
+    } else if (password.length < 6) {
+      toast.error("Password should be equal or greater than 6 chars ⚠");
+      return false;
+    }
+    return true;
+  };
 
   return (
     <>
