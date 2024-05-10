@@ -1,17 +1,25 @@
-import { Link } from "react-router-dom";
+/* eslint-disable no-undef */
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/logo.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { registerRoute } from "../utils/ApiRoutes";
 
 export default function Register() {
+  const navigate = useNavigate();
   const [values, setValues] = useState({
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+
+  useEffect(() => {
+    if (localStorage.getItem("user")) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,6 +30,14 @@ export default function Register() {
         email,
         password,
       });
+
+      if (data.status === false) {
+        toast.error(data.msg);
+      }
+      if (data.status === true) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+        navigate("/login");
+      }
     }
   };
 

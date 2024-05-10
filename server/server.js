@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const authRoutes = require("./routes/userRoutes");
 
 const app = express();
 require("dotenv").config();
@@ -19,6 +20,9 @@ const dbConnect = async () => {
       console.log(err.message);
     });
 };
+
+//API
+app.use("/api/auth", authRoutes);
 
 const server = app.listen(process.env.PORT, () => {
   console.log(`Server started on port ${process.env.PORT}`);
