@@ -51,3 +51,25 @@ module.exports.register = async (req, res) => {
     console.log(error);
   }
 };
+
+module.exports.setAvatar = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const avatarImg = req.body.image;
+    const userData = await User.findByIdAndUpdate(
+      userId,
+      {
+        isAvatarImageSet: true,
+        avatarImg,
+      },
+      { new: true }
+    );
+
+    return res.json({
+      isSet: userData.isAvatarImageSet,
+      image: userData.avatarImage,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
