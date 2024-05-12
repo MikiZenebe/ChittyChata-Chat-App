@@ -27,3 +27,7 @@ body {
 .bg {
   background: linear-gradient(to left top, #0940b0, #69b8f0da 90%);
 }
+
+.loader {
+  max-inline-size: 100%;
+}
