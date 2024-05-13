@@ -8,6 +8,8 @@ export default function SetAvatar() {
   const imageRef = useRef(null);
   const { handleImageChange, imgUrl } = usePreviewImg();
 
+  //backdrop-blur-md bg-white/70
+
   return (
     <div className="bg">
       {!isLoading ? (
@@ -17,7 +19,7 @@ export default function SetAvatar() {
         </div>
       ) : (
         <div className="flex items-center justify-center flex-col gap-[3rem] h-[100vh] w-[100vw] ">
-          <form className="flex gap-2 flex-col bg-white rounded-lg py-[2rem] px-[3rem]">
+          <form className="flex gap-2 flex-col bg-white rounded-lg py-[2rem] px-[3rem] ">
             <h1 className="font-bold text-2xl">
               Pick an Avatar as your profile picture
             </h1>

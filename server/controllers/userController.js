@@ -55,20 +55,16 @@ module.exports.register = async (req, res) => {
 module.exports.setAvatar = async (req, res) => {
   try {
     const userId = req.params.id;
-    const avatarImg = req.body.image;
-    const userData = await User.findByIdAndUpdate(
-      userId,
-      {
-        isAvatarImageSet: true,
-        avatarImg,
-      },
-      { new: true }
-    );
+    const { img } = req.body;
+    const userData = await User.findByIdAndUpdate(userId);
+    if (!userData) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
-    return res.json({
-      isSet: userData.isAvatarImageSet,
-      image: userData.avatarImage,
-    });
+    const newAvatar = new User({ img });
+    await newAvatar.save();
+
+    res.status(200).json(newAvatar);
   } catch (error) {
     console.log(error);
   }
