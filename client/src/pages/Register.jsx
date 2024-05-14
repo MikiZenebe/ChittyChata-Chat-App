@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { registerRoute } from "../utils/ApiRoutes";
 import usePreviewImg from "../utils/usePreviewImg";
-import { BsFillImageFill, BsPlus } from "react-icons/bs";
+import { BsFillImageFill } from "react-icons/bs";
 
 export default function Register() {
   const navigate = useNavigate();
