@@ -1,10 +1,12 @@
 /* eslint-disable no-undef */
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/logo.svg";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { registerRoute } from "../utils/ApiRoutes";
+import usePreviewImg from "../utils/usePreviewImg";
+import { BsFillImageFill, BsPlus } from "react-icons/bs";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -14,6 +16,8 @@ export default function Register() {
     password: "",
     confirmPassword: "",
   });
+  const imageRef = useRef(null);
+  const { handleImageChange, imgUrl, setImgUrl } = usePreviewImg();
 
   useEffect(() => {
     if (localStorage.getItem("user")) {
@@ -29,6 +33,7 @@ export default function Register() {
         username,
         email,
         password,
+        img: imgUrl,
       });
 
       if (data.status === false) {
@@ -70,6 +75,44 @@ export default function Register() {
           <div className="flex items-center gap-2 justify-center">
             <img className="h-[3rem]" src={Logo} alt="" />
             <h1 className=" text-lg font-semibold">EnnyMini</h1>
+          </div>
+
+          <div className="flex gap-2 flex-col px-[3rem] ">
+            <h1 className="font-bold text-md text-gray-500">
+              Choose image as your profile picture
+            </h1>
+            <div className="mx-auto  flex items-center justify-center transition-all ease-in-out">
+              <input
+                type="file"
+                hidden
+                ref={imageRef}
+                onChange={handleImageChange}
+              />
+
+              {imgUrl ? (
+                <div className="w-full mt-5 cursor-pointer relative">
+                  <img
+                    className="w-[70px] h-[70px] object-cover rounded-full "
+                    src={imgUrl}
+                    alt="Selected img"
+                  />
+                  <div
+                    className=" absolute top-8 right-0 bottom-0 left-7 text-w"
+                    onClick={() => {
+                      setImgUrl("");
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="rounded-full">
+                  <BsFillImageFill
+                    className=" cursor-pointer text-gray-700"
+                    size={30}
+                    onClick={() => imageRef.current.click()}
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
           <input

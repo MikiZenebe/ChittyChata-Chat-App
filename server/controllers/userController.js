@@ -29,7 +29,7 @@ module.exports.login = async (req, res) => {
 
 module.exports.register = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, img } = req.body;
     const usernameCheck = await User.findOne({ username });
 
     if (usernameCheck)
@@ -44,27 +44,10 @@ module.exports.register = async (req, res) => {
       email,
       username,
       password: hashedPassword,
+      img,
     });
     delete user.password;
     return res.json({ status: true, user });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-module.exports.setAvatar = async (req, res) => {
-  try {
-    const userId = req.params.id;
-    const { img } = req.body;
-    const userData = await User.findByIdAndUpdate(userId);
-    if (!userData) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    const newAvatar = new User({ img });
-    await newAvatar.save();
-
-    res.status(200).json(newAvatar);
   } catch (error) {
     console.log(error);
   }
