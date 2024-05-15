@@ -52,3 +52,17 @@ module.exports.register = async (req, res) => {
     console.log(error);
   }
 };
+
+module.exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({ _id: { $ne: req.params.id } }).select([
+      "email",
+      "username",
+      "profilePic",
+      "_id",
+    ]);
+    return res.json(users);
+  } catch (error) {
+    console.log(error);
+  }
+};
