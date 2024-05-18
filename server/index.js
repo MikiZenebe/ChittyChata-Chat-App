@@ -1,12 +1,15 @@
 import express from "express";
 import cors from "cors";
-import connectDB from "./config/connectDB.js";
+import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+import connectDB from "./config/connectDB.js";
 import userRoutes from "./routes/userRoutes.js";
+import checkRoutes from "./routes/checkRoutes.js";
 
 const app = express();
 dotenv.config();
 app.use(express.json());
+app.use(cookieParser());
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
@@ -16,6 +19,7 @@ app.use(
 
 //api endpoints
 app.use("/api", userRoutes);
+app.use("/api", checkRoutes);
 
 const PORT = process.env.PORT || 5000;
 
