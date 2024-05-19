@@ -72,3 +72,35 @@ export const userLogout = async (req, res) => {
     });
   }
 };
+export const updateUser = async (req, res) => {
+  try {
+    const token = req.cookies.token || "";
+
+    const user = await getUserDetailsFromToken(token);
+
+    const { username, name, email, profile_pic } = req.body;
+
+    const updateUser = await User.updateOne(
+      { _id: user._id },
+      {
+        username,
+        name,
+        email,
+        profile_pic,
+      }
+    );
+
+    const userInfo = await User.findById(user?._id);
+
+    return res.json({
+      message: "user update successfully",
+      data: userInfo,
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || error,
+      error: true,
+    });
+  }
+};

@@ -1,6 +1,7 @@
 import express from "express";
 import {
   registerUser,
+  updateUser,
   userDetails,
   userLogout,
 } from "../controllers/UserController.js";
@@ -15,5 +16,8 @@ router.get("/user-details", userDetails);
 
 //logout user
 router.get("/logout", userLogout);
+
+//update user details
+router.post("/update-user", updateUser);
 
 export default router;
