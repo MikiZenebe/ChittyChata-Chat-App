@@ -1,10 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/logo.png";
 import { useState } from "react";
 import { IoClose } from "react-icons/io5";
+import uploadFile from "../helpers/uploadFile";
+import { registerAPI } from "../api/apiEndPoints";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function Register() {
-  const [datas, setDatas] = useState({
+  const navigate = useNavigate();
+  const [data, setData] = useState({
     username: "",
     name: "",
     email: "",
@@ -14,11 +19,20 @@ export default function Register() {
   const [uploadPhoto, setUploadPhoto] = useState("");
 
   const handleChange = (e) => {
-    setDatas({ ...datas, [e.target.name]: e.target.value });
+    setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const handleUploadPhoto = (e) => {
+  const handleUploadPhoto = async (e) => {
     const file = e.target.files[0];
+
+    const uploadPhoto = await uploadFile(file);
+
+    setData((prev) => {
+      return {
+        ...prev,
+        profile_pic: uploadPhoto?.url,
+      };
+    });
 
     if (file && file.type.startsWith("image/")) {
       const reader = new FileReader();
@@ -26,7 +40,7 @@ export default function Register() {
       reader.onloadend = () => {
         setUploadPhoto(reader.result);
       };
-
+      console.log(uploadPhoto);
       reader.readAsDataURL(file);
     } else {
       setUploadPhoto(null);
@@ -43,7 +57,25 @@ export default function Register() {
     e.stopPropagation();
     e.preventDefault();
 
-    console.log("data", datas);
+    try {
+      const res = await axios.post(registerAPI, data);
+      console.log("response", res);
+
+      toast.success("Account created successfully 🚀");
+
+      if (res.data.success) {
+        setData({
+          name: "",
+          email: "",
+          password: "",
+          profile_pic: "",
+        });
+
+        navigate("/email");
+      }
+    } catch (error) {
+      toast.error(error?.res?.data?.message);
+    }
   };
 
   return (
@@ -58,30 +90,30 @@ export default function Register() {
           <input
             className="input"
             type="text"
-            id="username"
-            name="username"
-            placeholder="Username"
-            value={datas.username}
-            onChange={handleChange}
-            required
-          />
-          <input
-            className="input"
-            type="text"
             id="name"
             name="name"
             placeholder="Name"
-            value={datas.name}
+            value={data.name}
             onChange={handleChange}
             required
           />{" "}
+          <input
+            className="input"
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Username"
+            value={data.username}
+            onChange={handleChange}
+            required
+          />
           <input
             className="input"
             type="email"
             id="email"
             name="email"
             placeholder="Email"
-            value={datas.email}
+            value={data.email}
             onChange={handleChange}
             required
           />{" "}
@@ -91,7 +123,7 @@ export default function Register() {
             id="password"
             name="password"
             placeholder="Password"
-            value={datas.password}
+            value={data.password}
             onChange={handleChange}
             required
           />
