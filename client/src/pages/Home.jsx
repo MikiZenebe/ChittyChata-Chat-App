@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import { logOut, setUser } from "../redux/userSlice";
 import logo from "../assets/logo.png";
+import { Sidebar } from "../components/index";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -36,15 +37,16 @@ export default function Home() {
 
   const basePath = location.pathname === "/";
   return (
-    <div className="grid lg:grid-cols-[300px, 1fr] h-screen max-h-screen">
-      <section className={`bg-red-300 ${!basePath && "hidden"}`}>
-        Sidebar
+    <div className="grid lg:grid-cols-[300px,1fr] h-screen max-h-screen">
+      <section className="bg-[#fafafa]">
+        <Sidebar />
       </section>
-      <section className={` ${basePath && "hidden"}`}>
+
+      <section>
         <Outlet />
       </section>
 
-      <div
+      {/* <div
         className={`justify-center items-center flex-col gap-2 hidden ${
           !basePath ? "hidden" : "lg:flex"
         }`}
@@ -55,7 +57,7 @@ export default function Home() {
         <p className="text-lg mt-2 text-slate-500">
           Select user to send message
         </p>
-      </div>
+      </div> */}
     </div>
   );
 }

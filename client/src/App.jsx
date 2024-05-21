@@ -4,7 +4,7 @@ import { Route, Routes } from "react-router-dom";
 
 export default function App() {
   return (
-    <>
+    <div className="">
       <Routes>
         <Route path="/register" element={<Register />} />
         <Route path="/email" element={<Email />} />{" "}
@@ -13,6 +13,6 @@ export default function App() {
           <Route path="/:userId" element={<Message />} />
         </Route>
       </Routes>
-    </>
+    </div>
   );
 }
