@@ -9,8 +9,9 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/email" element={<Email />} />{" "}
         <Route path="/password" element={<Password />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/:userId" element={<Message />} />
+        <Route path="" element={<Home />}>
+          <Route path="/:userId" element={<Message />} />
+        </Route>
       </Routes>
     </>
   );

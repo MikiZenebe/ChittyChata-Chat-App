@@ -1,11 +1,14 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { emailAPI, passwordAPI } from "../api/apiEndPoints";
+import { passwordAPI } from "../api/apiEndPoints";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Avatar from "../components/Avatar";
+import { useDispatch } from "react-redux";
+import { setToken } from "../redux/userSlice";
 
 export default function PasswordCheck() {
+  const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   const [data, setData] = useState({
@@ -41,6 +44,9 @@ export default function PasswordCheck() {
       toast.success("Logged in successfully 🚀");
 
       if (res.data.success) {
+        dispatch(setToken(res?.data?.token));
+        localStorage.setItem("token", res?.data?.token);
+
         setData({
           password: "",
         });
