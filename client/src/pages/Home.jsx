@@ -11,7 +11,6 @@ export default function Home() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  console.log("redux-user", user);
 
   const fetchUserDetails = async () => {
     try {
@@ -22,7 +21,7 @@ export default function Home() {
 
       dispatch(setUser(res.data.data));
 
-      if (res.data.logout) {
+      if (res.data.data.logout) {
         dispatch(logOut());
         navigate("/email");
       }
@@ -38,26 +37,27 @@ export default function Home() {
   const basePath = location.pathname === "/";
   return (
     <div className="grid lg:grid-cols-[300px,1fr] h-screen max-h-screen">
-      <section className="bg-[#fafafa]">
+      <section className={`bg-[#fafafa] ${!basePath && "hidden"} lg:block `}>
         <Sidebar />
       </section>
 
-      <section>
+      <section className={`${basePath && "hidden"}`}>
         <Outlet />
       </section>
 
-      {/* <div
+      <div
         className={`justify-center items-center flex-col gap-2 hidden ${
           !basePath ? "hidden" : "lg:flex"
         }`}
       >
-        <div>
-          <img src={logo} width={250} alt="logo" />
+        <div className="flex items-center">
+          <img className="w-[60px] h-[60px]" src={logo} alt="" />
+          <h2 className="text-xl font-bold text-[#00ADB5]">Chitty Chata</h2>
         </div>
-        <p className="text-lg mt-2 text-slate-500">
+        <p className="text-lg mt-2 text-gray-400 font-semibold">
           Select user to send message
         </p>
-      </div> */}
+      </div>
     </div>
   );
 }
