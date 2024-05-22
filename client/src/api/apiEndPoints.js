@@ -4,3 +4,4 @@ export const registerAPI = `${url}/api/register`;
 export const emailAPI = `${url}/api/email`;
 export const passwordAPI = `${url}/api/password`;
 export const userDetailAPI = `${url}/api/user-details`;
+export const userUpdateAPI = `${url}/api/update-user`;
