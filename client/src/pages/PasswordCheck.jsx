@@ -62,8 +62,6 @@ export default function PasswordCheck() {
       <div className="bg-white border shadow-black/5 shadow-lg w-full max-w-sm flex flex-col gap-6 rounded overflow-hidden p-6 mx-auto">
         <div className="flex flex-col items-center justify-center gap-2">
           <Avatar
-            width={50}
-            height={50}
             name={location?.state?.name}
             imageUrl={location?.state?.profile_pic}
           />

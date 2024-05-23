@@ -12,7 +12,7 @@ export default function Sidebar() {
   const user = useSelector((state) => state.user);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [allUser, setAllUser] = useState([]);
-  const [searchUser, setSearchUser] = useState(true);
+  const [searchUser, setSearchUser] = useState(false);
 
   return (
     <div className="w-full h-full grid grid-cols-[48px,1fr]">
@@ -49,7 +49,7 @@ export default function Sidebar() {
           <button>
             <Avatar
               width={35}
-              height={35}
+              height={45}
               name={user.name}
               imageUrl={user?.profile_pic}
             />

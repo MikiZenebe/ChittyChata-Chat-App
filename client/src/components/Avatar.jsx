@@ -29,17 +29,12 @@ export default function Avatar({ userId, name, imageUrl, width, height }) {
   const randomNumber = Math.floor(Math.random() * 9);
 
   return (
-    <div
-      className={`text-slate-800  rounded-full font-bold relative`}
-      style={{ width: width + "px", height: height + "px" }}
-    >
+    <div className={`text-slate-800  rounded-full font-bold relative`}>
       {imageUrl ? (
         <img
           src={imageUrl}
-          width={width}
-          height={height}
           alt={name}
-          className="overflow-hidden rounded-full"
+          className="overflow-hidden p-1 rounded-full object-cover w-[50px] h-[50px]"
         />
       ) : name ? (
         <div
