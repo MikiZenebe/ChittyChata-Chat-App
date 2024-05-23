@@ -1,9 +1,9 @@
 import { IoChatbubbleEllipses } from "react-icons/io5";
-import { FaUserCircle } from "react-icons/fa";
+import { FaUserPlus } from "react-icons/fa";
 import { BiLogOut } from "react-icons/bi";
 import { FiArrowUpLeft } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
-import { Avatar, EditUser } from "../components/index";
+import { Avatar, EditUser, SearchUser } from "../components/index";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import logo from "../assets/logo.png";
@@ -12,6 +12,7 @@ export default function Sidebar() {
   const user = useSelector((state) => state.user);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [allUser, setAllUser] = useState([]);
+  const [searchUser, setSearchUser] = useState(true);
 
   return (
     <div className="w-full h-full grid grid-cols-[48px,1fr]">
@@ -32,10 +33,11 @@ export default function Sidebar() {
           </NavLink>
 
           <div
+            onClick={() => setSearchUser(true)}
             className="w-12 h-12 text-slate-400 flex justify-center items-center cursor-pointer rounded hover:text-blue-400 transition-all ease-in-out"
             title="user"
           >
-            <FaUserCircle size={25} />
+            <FaUserPlus size={25} />
           </div>
         </div>
 
@@ -90,6 +92,11 @@ export default function Sidebar() {
       {/* Edit User Moada */}
       {editUserOpen && (
         <EditUser onClose={() => setEditUserOpen(false)} user={user} />
+      )}
+
+      {/* Search User */}
+      {searchUser && (
+        <SearchUser onClose={() => setSearchUser(false)} user={user} />
       )}
     </div>
   );
