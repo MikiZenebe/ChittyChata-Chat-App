@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
-import Loading from "./Loading";
+import { Loading, UserSearchCard } from "./index";
 
 export default function SearchUser() {
   const [searchUser, setSearchUser] = useState([]);
@@ -24,6 +24,12 @@ export default function SearchUser() {
         <div className="bg-white mt-2 w-full p-3 rounded">
           {searchUser.length === 0 && !loading && <p>no user found!</p>}
           {loading && <Loading />}
+
+          {searchUser.length !== 0 &&
+            !loading &&
+            searchUser.map((user, i) => {
+              return <UserSearchCard key={user._id} user={user} />;
+            })}
         </div>
       </div>
     </div>

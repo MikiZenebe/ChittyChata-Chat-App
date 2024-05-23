@@ -5,5 +5,15 @@ import EditUser from "./EditUser";
 import Divider from "./Divider";
 import SearchUser from "./SearchUser";
 import Loading from "./Loading";
+import UserSearchCard from "./UserSearchCard";
 
-export { Message, Avatar, Sidebar, EditUser, Divider, SearchUser, Loading };
+export {
+  Message,
+  Avatar,
+  Sidebar,
+  EditUser,
+  Divider,
+  SearchUser,
+  UserSearchCard,
+  Loading,
+};
