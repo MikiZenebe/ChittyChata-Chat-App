@@ -47,10 +47,11 @@ export default function Sidebar() {
         >
           <button onClick={() => setEditUserOpen(true)}>
             <Avatar
-              width={45}
-              height={45}
+              width={40}
+              height={40}
               name={user.name}
               imageUrl={user?.profile_pic}
+              userId={user._id}
             />
           </button>
           <button

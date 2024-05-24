@@ -59,12 +59,12 @@ export default function Home() {
         <Sidebar />
       </section>
 
-      <section className={`${basePath && "hidden"}`}>
+      <section className={`${basePath && "hidden"} `}>
         <Outlet />
       </section>
 
       <div
-        className={`justify-center items-center flex-col gap-2 hidden ${
+        className={`justify-center items-center flex-col gap-2 hidden $ {
           !basePath ? "hidden" : "lg:flex"
         }`}
       >

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { IoClose, IoSearchOutline } from "react-icons/io5";
 import { Loading, UserSearchCard } from "./index";
