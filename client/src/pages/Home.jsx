@@ -1,16 +1,17 @@
 import axios from "axios";
+import io from "socket.io-client";
 import { userDetailAPI } from "../api/apiEndPoints";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
-import { logOut, setUser } from "../redux/userSlice";
+import { logOut, setUser, setOnlineUser } from "../redux/userSlice";
 import logo from "../assets/logo.png";
 import { Sidebar } from "../components/index";
+import { backEndUrl } from "../api/apiEndPoints";
 
 export default function Home() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
 
   const fetchUserDetails = async () => {
     try {
@@ -34,6 +35,23 @@ export default function Home() {
     fetchUserDetails();
   }, []);
 
+  /* Socket Connection */
+  useEffect(() => {
+    const socketConnection = io(backEndUrl, {
+      auth: {
+        token: localStorage.getItem("token"),
+      },
+    });
+
+    socketConnection.on("onlineUser", (data) => {
+      dispatch(setOnlineUser(data));
+    });
+
+    return () => {
+      socketConnection.disconnect();
+    };
+  }, []);
+
   const basePath = location.pathname === "/";
   return (
     <div className="grid lg:grid-cols-[300px,1fr] h-screen max-h-screen">
@@ -52,7 +70,7 @@ export default function Home() {
       >
         <div className="flex items-center">
           <img className="w-[60px] h-[60px]" src={logo} alt="" />
-          <h2 className="text-xl font-bold text-[#00ADB5]">Chitty Chata</h2>
+          <h2 className="text-xl font-bold text-[#46a4ec]">Chitty Chata</h2>
         </div>
         <p className="text-lg mt-2 text-gray-400 font-semibold">
           Select user to send message

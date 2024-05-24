@@ -83,7 +83,7 @@ export default function Register() {
       <div className="bg-white border shadow-black/5 shadow-lg w-full max-w-sm flex flex-col gap-6 rounded overflow-hidden p-6 mx-auto">
         <div className="flex items-center justify-center">
           <img className="w-[40px]" src={Logo} alt="" />
-          <h2 className="text-lg font-bold text-[#00ADB5]">Chitty Chata</h2>
+          <h2 className="text-lg font-bold text-[#46a4ec]">Chitty Chata</h2>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">

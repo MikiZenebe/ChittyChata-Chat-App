@@ -5,8 +5,8 @@ import dotenv from "dotenv";
 import connectDB from "./config/connectDB.js";
 import userRoutes from "./routes/userRoutes.js";
 import checkRoutes from "./routes/checkRoutes.js";
+import { app, server } from "./socket/index.js";
 
-const app = express();
 dotenv.config();
 app.use(express.json());
 app.use(cookieParser());
@@ -23,7 +23,7 @@ app.use("/api", checkRoutes);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log("Server running at " + PORT);
   connectDB();
 });
