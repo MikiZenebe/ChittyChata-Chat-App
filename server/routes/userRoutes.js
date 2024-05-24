@@ -1,6 +1,7 @@
 import express from "express";
 import {
   registerUser,
+  searchUser,
   updateUser,
   userDetails,
   userLogout,
@@ -19,5 +20,8 @@ router.get("/logout", userLogout);
 
 //update user details
 router.post("/update-user", updateUser);
+
+//search user
+router.post("/search-user", searchUser);
 
 export default router;

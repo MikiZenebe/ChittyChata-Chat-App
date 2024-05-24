@@ -22,6 +22,10 @@ code {
   background: linear-gradient(to left top, #46a4ec, #118da7 70%);
 }
 
+.bgSearch:hover {
+  background: linear-gradient(to left top, #46a4ec, #118da7 80%);
+}
+
 /* .textGrad {
   background: linear-gradient(#3fa1e2, #108ca6 70%);
   -webkit-background-clip: text;

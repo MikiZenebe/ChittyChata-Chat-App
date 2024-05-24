@@ -74,26 +74,32 @@ export default function EditUser({ onClose, user }) {
         <h2 className="font-semibold text-lg">Profile Details</h2>
 
         <form onSubmit={handleSubmit} className="grid gap-3 mt-3">
-          <input
-            className="input"
-            type="text"
-            name="username"
-            id="username"
-            placeholder="Username"
-            value={data.username}
-            required
-            onChange={handleChange}
-          />
-          <input
-            className="input"
-            type="text"
-            name="name"
-            id="name"
-            placeholder="Name"
-            value={data.name}
-            required
-            onChange={handleChange}
-          />
+          <div className="flex flex-col">
+            <label className="text-gray-400">Username</label>
+            <input
+              className="input"
+              type="text"
+              name="username"
+              id="username"
+              placeholder="Username"
+              value={data.username}
+              required
+              onChange={handleChange}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label className="text-gray-400">Name</label>
+            <input
+              className="input"
+              type="text"
+              name="name"
+              id="name"
+              placeholder="Name"
+              value={data.name}
+              required
+              onChange={handleChange}
+            />
+          </div>
 
           <div className="flex items-center gap-3">
             <Avatar

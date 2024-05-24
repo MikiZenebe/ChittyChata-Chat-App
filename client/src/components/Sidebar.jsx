@@ -12,7 +12,7 @@ export default function Sidebar() {
   const user = useSelector((state) => state.user);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [allUser, setAllUser] = useState([]);
-  const [searchUser, setSearchUser] = useState(false);
+  const [searchUser, setSearchUser] = useState(true);
 
   return (
     <div className="w-full h-full grid grid-cols-[48px,1fr]">
@@ -23,7 +23,7 @@ export default function Sidebar() {
           </div>
           <NavLink
             className={({ isActive }) =>
-              `w-12 h-12 text-slate-400 flex justify-center items-center cursor-pointer rounded hover:text-blue-400 transition-all ease-in-out ${
+              `w-12 h-12  text-slate-400 flex justify-center items-center cursor-pointer rounded hover:text-blue-400 transition-all ease-in-out ${
                 isActive && "text-blue-400 "
               }`
             }
@@ -44,11 +44,10 @@ export default function Sidebar() {
         <div
           className="flex flex-col gap-2 items-center justify-center"
           title={user.name}
-          onClick={() => setEditUserOpen(true)}
         >
-          <button>
+          <button onClick={() => setEditUserOpen(true)}>
             <Avatar
-              width={35}
+              width={45}
               height={45}
               name={user.name}
               imageUrl={user?.profile_pic}
