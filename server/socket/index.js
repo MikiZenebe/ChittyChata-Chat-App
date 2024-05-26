@@ -2,6 +2,7 @@ import express from "express";
 import { Server } from "socket.io";
 import http from "http";
 import getUserDetailsFromToken from "../helpers/getUserDetailFromToken.js";
+import User from "../models/UserModel.js";
 
 const app = express();
 
@@ -29,9 +30,24 @@ io.on("connection", async (socket) => {
 
   //create a room
   socket.join(user?._id);
-  onlineUser.add(user?._id);
+  onlineUser.add(user?._id.toString());
 
   io.emit("onlineUser", Array.from(onlineUser));
+
+  socket.on("message-page", async (userId) => {
+    console.log("userId", userId);
+    const userDetails = await User.findById(userId).select("-password");
+
+    const payload = {
+      _id: userDetails._id,
+      name: userDetails.name,
+      email: userDetails.email,
+      profile_pic: userDetails.profile_pic,
+      online: onlineUser.has(userId),
+    };
+
+    socket.emit("message-user", payload);
+  });
 
   //disconnect
   socket.on("disconnect", () => {

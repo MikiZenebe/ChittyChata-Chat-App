@@ -4,7 +4,12 @@ import { userDetailAPI } from "../api/apiEndPoints";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
-import { logOut, setUser, setOnlineUser } from "../redux/userSlice";
+import {
+  logOut,
+  setUser,
+  setOnlineUser,
+  setSocketConnection,
+} from "../redux/userSlice";
 import logo from "../assets/logo.png";
 import { Sidebar } from "../components/index";
 import { backEndUrl } from "../api/apiEndPoints";
@@ -46,6 +51,8 @@ export default function Home() {
     socketConnection.on("onlineUser", (data) => {
       dispatch(setOnlineUser(data));
     });
+
+    dispatch(setSocketConnection(socketConnection));
 
     return () => {
       socketConnection.disconnect();
