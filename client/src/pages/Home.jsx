@@ -62,7 +62,7 @@ export default function Home() {
   const basePath = location.pathname === "/";
   return (
     <div className="grid lg:grid-cols-[300px,1fr] h-screen max-h-screen">
-      <section className={`bg-[#fafafa] ${!basePath && "hidden"} lg:block `}>
+      <section className={`bg-[#f8f8f842] ${!basePath && "hidden"} lg:block `}>
         <Sidebar />
       </section>
 

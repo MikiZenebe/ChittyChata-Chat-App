@@ -65,7 +65,7 @@ export default function Sidebar() {
 
       <div className="w-full flex flex-col">
         <div>
-          <h2 className="text-lg font-bold p-5">
+          <h2 className="text-lg font-bold p-[18.5px]">
             Message
             <span className="text-sm font-normal text-blue-400 ml-1">
               48 <span className="text-xs">New</span>
@@ -73,7 +73,7 @@ export default function Sidebar() {
           </h2>
         </div>
 
-        <div className="bg-slate-200 p-[0.5px]"></div>
+        <div className="bg-slate-100 p-[0.5px]"></div>
 
         <div className="h-[calc(100vh-65px)] overflow-x-hidden overflow-y-auto scrollbar">
           {allUser.length === 0 && (
