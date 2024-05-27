@@ -31,7 +31,7 @@ export default function Message() {
 
   return (
     <div>
-      <header className="sticky top-0 h-[65px] bg-white p-3 border-b border-slate-100 flex items-center justify-between px-4">
+      <header className="sticky top-0 h-[65px] bg-white p-3 shadow-xl shadow-black/0 backdrop-blur-md bg-white/60 flex items-center justify-between px-4">
         <div className="flex items-center gap-3">
           <Link to={"/"} className="lg:hidden ">
             <FaAngleLeft size={20} />
@@ -70,7 +70,7 @@ export default function Message() {
       </header>
 
       {/* Show All Messages */}
-      <section className="h-[calc(100vh-64px)] bgMessage">
+      <section className="h-[calc(100vh-64px)] bgMessage overflow-x-hidden overflow-y-scroll scrollbar">
         Show all messages
       </section>
     </div>
