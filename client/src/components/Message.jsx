@@ -3,7 +3,8 @@ import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { Avatar } from "../components/index";
 import { HiDotsVertical } from "react-icons/hi";
-import { FaAngleLeft } from "react-icons/fa";
+import { FaAngleLeft, FaImage, FaPlus, FaVideo } from "react-icons/fa";
+import uploadFile from "../helpers/uploadFile";
 
 export default function Message() {
   const params = useParams();
@@ -18,6 +19,13 @@ export default function Message() {
     online: false,
     _id: "",
   });
+  const [message, setMessage] = useState({
+    text: "",
+    imageUrl: "",
+    videoUrl: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [openImgVideoUpload, setOpenImgVideoUpload] = useState(false);
 
   useEffect(() => {
     if (socketConnection) {
@@ -29,10 +37,64 @@ export default function Message() {
     }
   }, [params.userId, socketConnection, user]);
 
+  const handleFileUploadOpen = () => {
+    setOpenImgVideoUpload((prev) => !prev);
+  };
+
+  //Upload Image
+  const handleUploadImage = async (e) => {
+    const file = e.target.value[0];
+
+    setLoading(true);
+    const uploadPhoto = await uploadFile(file);
+    setLoading(false);
+    setOpenImgVideoUpload(false);
+
+    setMessage((prev) => {
+      return {
+        ...prev,
+        imageUrl: uploadPhoto.url,
+      };
+    });
+  };
+  const handleClearUploadImage = () => {
+    setMessage((preve) => {
+      return {
+        ...preve,
+        imageUrl: "",
+      };
+    });
+  };
+
+  const handleUploadVideo = async (e) => {
+    const file = e.target.files[0];
+
+    setLoading(true);
+    const uploadPhoto = await uploadFile(file);
+    setLoading(false);
+    setOpenImgVideoUpload(false);
+
+    setMessage((preve) => {
+      return {
+        ...preve,
+        videoUrl: uploadPhoto.url,
+      };
+    });
+  };
+
+  const handleClearUploadVideo = () => {
+    setMessage((preve) => {
+      return {
+        ...preve,
+        videoUrl: "",
+      };
+    });
+  };
+
   return (
-    <div>
+    <div className="">
       <header className="sticky top-0 h-[65px] bg-white p-3 shadow-xl shadow-black/0 backdrop-blur-md bg-white/60 flex items-center justify-between px-4">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 ">
           <Link to={"/"} className="lg:hidden ">
             <FaAngleLeft size={20} />
           </Link>
@@ -70,8 +132,54 @@ export default function Message() {
       </header>
 
       {/* Show All Messages */}
-      <section className="h-[calc(100vh-64px)] bgMessage overflow-x-hidden overflow-y-scroll scrollbar">
+      <section className="h-[calc(100vh-64px)] bgMessage overflow-x-hidden overflow-y-scroll scrollbar flex flex-col justify-between">
         Show all messages
+        {/**send message */}
+        <section className="h-12 bg-white flex items-center mx-16 my-4 border border-opacity-40 border-[#108ca6] rounded-2xl shadow-xl shadow-black/0 backdrop-blur-md bg-white/70">
+          <div className="relative flex justify-center items-center w-7 h-7 rounded-full bgHover  text-[#108ca6] transition-all duration-[300ms] ease-out mx-2">
+            <button onClick={handleFileUploadOpen} className="hover:text-white">
+              <FaPlus size={15} />
+            </button>
+
+            {openImgVideoUpload && (
+              <div className=" shadow-xl shadow-black/0 backdrop-blur-md bg-white/60 rounded-xl absolute bottom-14 w-auto p-2">
+                <form>
+                  <label
+                    htmlFor="uploadImage"
+                    className="flex items-center p-2 px-3 gap-3 bgHover cursor-pointer rounded-xl hover:text-white"
+                  >
+                    <div>
+                      <FaImage />
+                    </div>
+                  </label>
+
+                  <label
+                    htmlFor="uploadVideo"
+                    className="flex items-center p-2 px-3 gap-3 bgHover cursor-pointer rounded-xl hover:text-white"
+                  >
+                    <div>
+                      <FaVideo size={18} />
+                    </div>
+                  </label>
+
+                  <input
+                    type="file"
+                    id="uploadImage"
+                    className="hidden"
+                    onChange={handleUploadImage}
+                  />
+
+                  <input
+                    type="file"
+                    id="uploadVideo"
+                    className="hidden"
+                    onChange={handleUploadVideo}
+                  />
+                </form>
+              </div>
+            )}
+          </div>
+        </section>{" "}
       </section>
     </div>
   );

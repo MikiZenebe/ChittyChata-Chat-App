@@ -21,7 +21,9 @@ code {
 .bg {
   background: linear-gradient(to left top, #46a4ec, #118da7 70%);
 }
-
+.bgHover:hover {
+  background: linear-gradient(to left top, #46a4ec, #118da7 70%);
+}
 .bgMessage {
   background: linear-gradient(to left top, #edd1e7, #f5dad3 80%);
 }
@@ -29,7 +31,7 @@ code {
 /* .textGrad {
   background: linear-gradient(#3fa1e2, #108ca6 70%);
   -webkit-background-clip: text;
-  background-clip: text;
+  background-clip: border;
   -webkit-text-fill-color: transparent;
 } */
 
