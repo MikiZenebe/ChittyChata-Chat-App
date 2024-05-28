@@ -133,9 +133,9 @@ export default function Message() {
 
       {/* Show All Messages */}
       <section className="h-[calc(100vh-64px)] bgMessage overflow-x-hidden overflow-y-scroll scrollbar flex flex-col justify-between">
-        <div>
-          {message.imageUrl && (
-            <div className="w-full h-full bg-white flex justify-center items-center rounded overflow-hidden">
+        <div className="my-auto">
+          {!message.imageUrl && (
+            <div className="w-full h-full bgMessage flex justify-center items-center rounded overflow-hidden">
               <div className="bg-white p-3 rounded">
                 <img
                   src={message.imageUrl}
@@ -148,7 +148,7 @@ export default function Message() {
           )}
         </div>
         {/**send message */}
-        <section className="h-12 bg-white flex items-center mx-16 my-4 border border-opacity-40 border-[#108ca6] rounded-2xl shadow-xl shadow-black/0 backdrop-blur-md bg-white/70">
+        <section className="h-12 bg-white flex items-center mx-8 md:mx-16 my-4 border border-opacity-40 border-[#108ca6] rounded-2xl shadow-xl shadow-black/0 backdrop-blur-md bg-white/70">
           <div className="relative flex justify-center items-center w-7 h-7 rounded-full bgHover  text-[#108ca6] transition-all duration-[300ms] ease-out mx-2">
             <button onClick={handleFileUploadOpen} className="hover:text-white">
               <FaPlus size={15} />
