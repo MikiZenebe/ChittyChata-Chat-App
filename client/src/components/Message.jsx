@@ -44,7 +44,7 @@ export default function Message() {
 
   //Upload Image
   const handleUploadImage = async (e) => {
-    const file = e.target.value[0];
+    const file = e.target.files[0];
 
     setLoading(true);
     const uploadPhoto = await uploadFile(file);
@@ -134,47 +134,49 @@ export default function Message() {
 
       <section className="h-[calc(100vh-64px)] bgMessage overflow-x-hidden overflow-y-scroll scrollbar flex flex-col justify-between relative">
         {/* Upload Image Display */}
-        <>
-          {message.imageUrl && (
-            <div className="w-full h-full bg-slate-700 flex justify-center items-center rounded overflow-hidden">
-              <div
-                onClick={handleClearUploadImage}
-                className="w-fit p-2 absolute top-0 right-0 cursor-pointer text-white hover:text-blue-500"
-              >
-                <IoClose size={25} />
+        <div className="flex items-center justify-center h-full">
+          <>
+            {message.imageUrl && (
+              <div className="w-full h-full bg-slate-700/30 flex justify-center items-center rounded overflow-hidden">
+                <div
+                  onClick={handleClearUploadImage}
+                  className="w-fit p-2 absolute top-0 right-0 cursor-pointer text-white hover:text-blue-500"
+                >
+                  <IoClose size={25} />
+                </div>
+                <div className="bg-white p-3 rounded">
+                  <img
+                    src={message.imageUrl}
+                    alt="uploadImg"
+                    width={300}
+                    height={100}
+                  />
+                </div>
               </div>
-              <div className="bg-white p-3 rounded">
-                <img
-                  src={message.imageUrl}
-                  alt="uploadImg"
-                  width={300}
-                  height={100}
-                />
+            )}
+          </>
+          {/* Upload Video Display */}
+          <>
+            {message.videoUrl && (
+              <div className="w-full h-full bg-slate-700 flex justify-center items-center rounded overflow-hidden">
+                <div
+                  onClick={handleClearUploadVideo}
+                  className="w-fit p-2 absolute top-0 right-0 cursor-pointer text-white hover:text-blue-500"
+                >
+                  <IoClose size={25} />
+                </div>
+                <div className="bg-white p-3 rounded">
+                  <video
+                    src={message.videoUrl}
+                    width={300}
+                    height={300}
+                    alt="videoUpload"
+                  />
+                </div>
               </div>
-            </div>
-          )}
-        </>
-        {/* Upload Video Display */}
-        <>
-          {message.videoUrl && (
-            <div className="w-full h-full bg-slate-700 flex justify-center items-center rounded overflow-hidden">
-              <div
-                onClick={handleClearUploadVideo}
-                className="w-fit p-2 absolute top-0 right-0 cursor-pointer text-white hover:text-blue-500"
-              >
-                <IoClose size={25} />
-              </div>
-              <div className="bg-white p-3 rounded">
-                <video
-                  src={message.videoUrl}
-                  width={300}
-                  height={300}
-                  alt="videoUpload"
-                />
-              </div>
-            </div>
-          )}
-        </>
+            )}
+          </>
+        </div>
         {/**send message */}
         <section className="h-12 bg-white flex items-center mx-8 md:mx-16 my-4 border border-opacity-40 border-[#108ca6] rounded-2xl shadow-xl shadow-black/0 backdrop-blur-md bg-white/70">
           <div className="relative flex justify-center items-center w-7 h-7 rounded-full bgHover  text-[#108ca6] transition-all duration-[300ms] ease-out mx-2">
