@@ -158,7 +158,7 @@ export default function Message() {
           {/* Upload Video Display */}
           <>
             {message.videoUrl && (
-              <div className="w-full h-full bg-slate-700 flex justify-center items-center rounded overflow-hidden">
+              <div className="w-full h-full bg-slate-700/30 flex justify-center items-center rounded overflow-hidden">
                 <div
                   onClick={handleClearUploadVideo}
                   className="w-fit p-2 absolute top-0 right-0 cursor-pointer text-white hover:text-blue-500"
