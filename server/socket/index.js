@@ -3,6 +3,10 @@ import { Server } from "socket.io";
 import http from "http";
 import getUserDetailsFromToken from "../helpers/getUserDetailFromToken.js";
 import User from "../models/UserModel.js";
+import {
+  ConversationModel,
+  MessageModel,
+} from "../models/ConversationModel.js";
 
 const app = express();
 
@@ -30,7 +34,7 @@ io.on("connection", async (socket) => {
 
   //create a room
   socket.join(user?._id);
-  onlineUser.add(user?._id.toString());
+  onlineUser.add(user?._id?.toString());
 
   io.emit("onlineUser", Array.from(onlineUser));
 
@@ -47,6 +51,63 @@ io.on("connection", async (socket) => {
     };
 
     socket.emit("message-user", payload);
+  });
+
+  //new message
+  socket.on("new message", async (data) => {
+    //Check conversation is avaliable both user
+    const conversation = await ConversationModel.findOne({
+      $or: [
+        {
+          sender: data?.sender,
+          receiver: data?.receiver,
+        },
+        {
+          sender: data?.receiver,
+          receiver: data?.sender,
+        },
+      ],
+    });
+
+    //if conversation not avaliable
+    if (!conversation) {
+      const createConversation = await ConversationModel({
+        sender: data?.sender,
+        receiver: data?.receiver,
+      });
+      conversation = await createConversation.save();
+    }
+
+    const message = new MessageModel({
+      text: data.text,
+      imageUrl: data.imageUrl,
+      videoUrl: data.videoUrl,
+    });
+    const saveMessage = await message.save();
+
+    const updateConversation = await ConversationModel.updateOne(
+      { _id: conversation?._id },
+      {
+        $push: {
+          messages: saveMessage?._id,
+        },
+      }
+    );
+
+    const getConversation = await ConversationModel.findOne({
+      $or: [
+        {
+          sender: data?.sender,
+          receiver: data?.receiver,
+        },
+        {
+          sender: data?.receiver,
+          receiver: data?.sender,
+        },
+      ],
+    });
+
+    console.log(getConversation);
   });
 
   //disconnect

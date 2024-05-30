@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-import { Avatar } from "../components/index";
+import { Avatar, Loading } from "../components/index";
 import { HiDotsVertical } from "react-icons/hi";
 import { FaAngleLeft, FaImage, FaPlus, FaVideo } from "react-icons/fa";
 import uploadFile from "../helpers/uploadFile";
-import { IoClose } from "react-icons/io5";
+import { IoClose, IoSend } from "react-icons/io5";
 
 export default function Message() {
   const params = useParams();
@@ -92,8 +92,35 @@ export default function Message() {
     });
   };
 
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+
+    setMessage((prev) => {
+      return {
+        ...prev,
+        text: value,
+      };
+    });
+  };
+
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+
+    if (message.text || message.imageUrl || message.videoUrl) {
+      if (socketConnection) {
+        socketConnection.emit("new message", {
+          sender: user._id,
+          receiver: params.userId,
+          text: message.text,
+          imageUrl: message.imageUrl,
+          videoUrl: message.videoUrl,
+        });
+      }
+    }
+  };
+
   return (
-    <div className="">
+    <div className="bgMessage">
       <header className="sticky top-0 h-[65px] bg-white p-3 shadow-xl shadow-black/0 backdrop-blur-md bg-white/60 flex items-center justify-between px-4">
         <div className="flex items-center gap-3 ">
           <Link to={"/"} className="lg:hidden ">
@@ -132,9 +159,16 @@ export default function Message() {
         </div>
       </header>
 
-      <section className="h-[calc(100vh-64px)] bgMessage overflow-x-hidden overflow-y-scroll scrollbar flex flex-col justify-between relative">
+      <section className="h-[calc(100vh-64px)]  overflow-x-hidden overflow-y-scroll scrollbar flex flex-col justify-between relative">
         {/* Upload Image Display */}
         <div className="flex items-center justify-center h-full">
+          <div className="w-full  flex justify-center items-center">
+            {loading && (
+              <div>
+                <Loading />
+              </div>
+            )}
+          </div>
           <>
             {message.imageUrl && (
               <div className="w-full h-full bg-slate-700/30 flex justify-center items-center rounded overflow-hidden">
@@ -150,6 +184,7 @@ export default function Message() {
                     alt="uploadImg"
                     width={300}
                     height={100}
+                    className="aspect-square w-full h-full max-w-sm m-2 object-scale-down"
                   />
                 </div>
               </div>
@@ -171,6 +206,7 @@ export default function Message() {
                     width={300}
                     height={300}
                     alt="videoUpload"
+                    className="aspect-video w-full h-full max-w-sm m-2"
                   />
                 </div>
               </div>
@@ -222,7 +258,24 @@ export default function Message() {
               </div>
             )}
           </div>
-        </section>{" "}
+
+          {/* Input box */}
+          <form
+            className="h-full w-full flex px-2"
+            onSubmit={handleSendMessage}
+          >
+            <input
+              type="text"
+              placeholder="Message"
+              className="py-1 outline-none w-full h-full bg-transparent"
+              value={message.text}
+              onChange={handleOnChange}
+            />
+            <button className="text-[#108ca6] hover:text-[#108ca6]/80">
+              <IoSend />
+            </button>
+          </form>
+        </section>
       </section>
     </div>
   );
