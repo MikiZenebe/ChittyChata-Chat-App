@@ -82,6 +82,7 @@ io.on("connection", async (socket) => {
       text: data.text,
       imageUrl: data.imageUrl,
       videoUrl: data.videoUrl,
+      msgByUserId: data?.msgByUserId,
     });
     const saveMessage = await message.save();
 
@@ -94,20 +95,22 @@ io.on("connection", async (socket) => {
       }
     );
 
-    const getConversation = await ConversationModel.findOne({
-      $or: [
-        {
-          sender: data?.sender,
-          receiver: data?.receiver,
-        },
-        {
-          sender: data?.receiver,
-          receiver: data?.sender,
-        },
-      ],
-    });
+    // const getConversation = await ConversationModel.findOne({
+    //   $or: [
+    //     {
+    //       sender: data?.sender,
+    //       receiver: data?.receiver,
+    //     },
+    //     {
+    //       sender: data?.receiver,
+    //       receiver: data?.sender,
+    //     },
+    //   ],
+    // })
+    //   .populate("messages")
+    //   .sort({ updatedAt: -1 });
 
-    console.log(getConversation);
+    // console.log(getConversation);
   });
 
   //disconnect
