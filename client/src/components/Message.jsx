@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { Avatar, Loading } from "../components/index";
@@ -6,6 +6,7 @@ import { HiDotsVertical } from "react-icons/hi";
 import { FaAngleLeft, FaImage, FaPlus, FaVideo } from "react-icons/fa";
 import uploadFile from "../helpers/uploadFile";
 import { IoClose, IoSend } from "react-icons/io5";
+import moment from "moment";
 
 export default function Message() {
   const params = useParams();
@@ -25,8 +26,19 @@ export default function Message() {
     imageUrl: "",
     videoUrl: "",
   });
+  const [allMessages, setAllMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [openImgVideoUpload, setOpenImgVideoUpload] = useState(false);
+  const currentMessage = useRef();
+
+  useEffect(() => {
+    if (currentMessage.current) {
+      currentMessage.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+  }, [allMessages]);
 
   useEffect(() => {
     if (socketConnection) {
@@ -37,7 +49,7 @@ export default function Message() {
       });
 
       socketConnection.on("message", (data) => {
-        console.log("message", data);
+        setAllMessages(data);
       });
     }
   }, [params.userId, socketConnection, user]);
@@ -131,7 +143,7 @@ export default function Message() {
 
   return (
     <div className="bgMessage">
-      <header className="sticky top-0 h-[65px] bg-white p-3 shadow-xl shadow-black/0 backdrop-blur-md bg-white/60 flex items-center justify-between px-4">
+      <header className="sticky top-0 h-[65px] p-3 shadow-xl shadow-black/0  bg-white/30 flex items-center justify-between px-4">
         <div className="flex items-center gap-3 ">
           <Link to={"/"} className="lg:hidden ">
             <FaAngleLeft size={20} />
@@ -169,9 +181,12 @@ export default function Message() {
         </div>
       </header>
 
-      <section className="h-[calc(100vh-64px)]  overflow-x-hidden overflow-y-scroll scrollbar flex flex-col justify-between relative">
+      <section className="h-[calc(100vh-64px)]  overflow-x-hidden overflow-y-scroll scrollbar flex flex-col justify-between relative ">
         {/* Upload Image Display */}
-        <div className="flex items-center justify-center h-full">
+        <div
+          onClick={() => setOpenImgVideoUpload(false)}
+          className="flex items-center justify-center h-full"
+        >
           <div className="w-full  flex justify-center items-center">
             {loading && (
               <div>
@@ -181,7 +196,7 @@ export default function Message() {
           </div>
           <>
             {message.imageUrl && (
-              <div className="w-full h-full bg-slate-700/30 flex justify-center items-center rounded overflow-hidden">
+              <div className="w-full h-full sticky bottom-0 bg-slate-700/30 flex justify-center items-center rounded overflow-hidden">
                 <div
                   onClick={handleClearUploadImage}
                   className="w-fit p-2 absolute top-0 right-0 cursor-pointer text-white hover:text-blue-500"
@@ -203,7 +218,7 @@ export default function Message() {
           {/* Upload Video Display */}
           <>
             {message.videoUrl && (
-              <div className="w-full h-full bg-slate-700/30 flex justify-center items-center rounded overflow-hidden">
+              <div className="w-full h-full sticky bottom-0 bg-slate-700/30 flex justify-center items-center rounded overflow-hidden">
                 <div
                   onClick={handleClearUploadVideo}
                   className="w-fit p-2 absolute top-0 right-0 cursor-pointer text-white hover:text-blue-500"
@@ -224,68 +239,106 @@ export default function Message() {
           </>
         </div>
         {/**send message */}
-        <section className="h-12 bg-white flex items-center mx-8 md:mx-16 my-4 border border-opacity-40 border-[#108ca6] rounded-2xl shadow-xl shadow-black/0 backdrop-blur-md bg-white/70">
-          <div className="relative flex justify-center items-center w-7 h-7 rounded-full bgHover  text-[#108ca6] transition-all duration-[300ms] ease-out mx-2">
-            <button onClick={handleFileUploadOpen} className="hover:text-white">
-              <FaPlus size={15} />
-            </button>
 
-            {openImgVideoUpload && (
-              <div className=" shadow-xl shadow-black/0 backdrop-blur-md bg-white/60 rounded-xl absolute bottom-14 w-auto p-2">
-                <form>
-                  <label
-                    htmlFor="uploadImage"
-                    className="flex items-center p-2 px-3 gap-3 bgHover cursor-pointer rounded-xl hover:text-white"
+        {/* All Message */}
+        <div className="flex flex-col p-4" ref={currentMessage}>
+          {allMessages.map((msg, i) => {
+            return (
+              <div key={i} className="w-full">
+                <div
+                  className={`flex flex-col w-fit ${
+                    user._id === msg.msgByUserId ? "ml-auto" : ""
+                  }`}
+                >
+                  <div
+                    className={`px-3.5 py-2  items-center gap-3 ${
+                      user._id === msg.msgByUserId
+                        ? "rounded-xl rounded-br-none bg text-white"
+                        : "rounded-xl rounded-bl-none bg-white"
+                    }`}
                   >
-                    <div>
-                      <FaImage />
-                    </div>
-                  </label>
-
-                  <label
-                    htmlFor="uploadVideo"
-                    className="flex items-center p-2 px-3 gap-3 bgHover cursor-pointer rounded-xl hover:text-white"
-                  >
-                    <div>
-                      <FaVideo size={18} />
-                    </div>
-                  </label>
-
-                  <input
-                    type="file"
-                    id="uploadImage"
-                    className="hidden"
-                    onChange={handleUploadImage}
-                  />
-
-                  <input
-                    type="file"
-                    id="uploadVideo"
-                    className="hidden"
-                    onChange={handleUploadVideo}
-                  />
-                </form>
+                    <p className="text-sm font-normal leading-snug">
+                      {msg.text}
+                    </p>
+                  </div>
+                  <div className="ml-auto w-fit items-center inline-flex mb-2.5">
+                    <h6 className="text-gray-500 text-xs font-normal leading-4 py-1">
+                      {moment(msg.createdAt).format("hh:mm")}
+                    </h6>
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
+            );
+          })}
+        </div>
 
-          {/* Input box */}
-          <form
-            className="h-full w-full flex px-2"
-            onSubmit={handleSendMessage}
-          >
-            <input
-              type="text"
-              placeholder="Message"
-              className="py-1 outline-none w-full h-full bg-transparent"
-              value={message.text}
-              onChange={handleOnChange}
-            />
-            <button className="text-[#108ca6] hover:text-[#108ca6]/80">
-              <IoSend />
-            </button>
-          </form>
-        </section>
+        <div className="bg-bgMessage  sticky bottom-0 top-0">
+          <section className=" h-12 bg-white flex items-center mx-8 md:mx-16 my-4 border border-opacity-40 border-[#108ca6] rounded-2xl shadow-xl shadow-black/0 backdrop-blur-md bg-white/70">
+            <div className="relative flex justify-center items-center w-7 h-7 rounded-full bgHover  text-[#108ca6] transition-all duration-[300ms] ease-out mx-2">
+              <button
+                onClick={handleFileUploadOpen}
+                className="hover:text-white"
+              >
+                <FaPlus size={15} />
+              </button>
+
+              {openImgVideoUpload && (
+                <div className=" shadow-xl shadow-black/0 backdrop-blur-md bg-white/60 rounded-xl absolute bottom-14 w-auto p-2">
+                  <form>
+                    <label
+                      htmlFor="uploadImage"
+                      className="flex items-center p-2 px-3 gap-3 bgHover cursor-pointer rounded-xl hover:text-white"
+                    >
+                      <div>
+                        <FaImage />
+                      </div>
+                    </label>
+
+                    <label
+                      htmlFor="uploadVideo"
+                      className="flex items-center p-2 px-3 gap-3 bgHover cursor-pointer rounded-xl hover:text-white"
+                    >
+                      <div>
+                        <FaVideo size={18} />
+                      </div>
+                    </label>
+
+                    <input
+                      type="file"
+                      id="uploadImage"
+                      className="hidden"
+                      onChange={handleUploadImage}
+                    />
+
+                    <input
+                      type="file"
+                      id="uploadVideo"
+                      className="hidden"
+                      onChange={handleUploadVideo}
+                    />
+                  </form>
+                </div>
+              )}
+            </div>
+
+            {/* Input box */}
+            <form
+              className="h-full w-full flex px-2"
+              onSubmit={handleSendMessage}
+            >
+              <input
+                type="text"
+                placeholder="Message"
+                className="py-1 outline-none w-full h-full bg-transparent"
+                value={message.text}
+                onChange={handleOnChange}
+              />
+              <button className="text-[#108ca6] hover:text-[#108ca6]/80">
+                <IoSend />
+              </button>
+            </form>
+          </section>
+        </div>
       </section>
     </div>
   );
