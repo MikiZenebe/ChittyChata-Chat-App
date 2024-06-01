@@ -33,7 +33,7 @@ io.on("connection", async (socket) => {
   const user = await getUserDetailsFromToken(token);
 
   //create a room
-  socket.join(user?._id);
+  socket.join(user?._id?.toString());
   onlineUser.add(user?._id?.toString());
 
   io.emit("onlineUser", Array.from(onlineUser));
@@ -95,22 +95,23 @@ io.on("connection", async (socket) => {
       }
     );
 
-    // const getConversation = await ConversationModel.findOne({
-    //   $or: [
-    //     {
-    //       sender: data?.sender,
-    //       receiver: data?.receiver,
-    //     },
-    //     {
-    //       sender: data?.receiver,
-    //       receiver: data?.sender,
-    //     },
-    //   ],
-    // })
-    //   .populate("messages")
-    //   .sort({ updatedAt: -1 });
+    const getConversation = await ConversationModel.findOne({
+      $or: [
+        {
+          sender: data?.sender,
+          receiver: data?.receiver,
+        },
+        {
+          sender: data?.receiver,
+          receiver: data?.sender,
+        },
+      ],
+    })
+      .populate("messages")
+      .sort({ updatedAt: -1 });
 
-    // console.log(getConversation);
+    io.to(data?.sender).emit("message", getConversation.messages);
+    io.to(data?.receiver).emit("message", getConversation.messages);
   });
 
   //disconnect
