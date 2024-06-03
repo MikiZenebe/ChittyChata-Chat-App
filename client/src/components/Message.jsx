@@ -204,6 +204,21 @@ export default function Message() {
                         : "rounded-xl rounded-bl-none bg-white"
                     }`}
                   >
+                    <div className="w-full relative">
+                      {msg?.imageUrl && (
+                        <img
+                          src={msg?.imageUrl}
+                          className="max-w-[250px] h-full object-scale-down"
+                        />
+                      )}
+                      {msg?.videoUrl && (
+                        <video
+                          src={msg.videoUrl}
+                          className="max-w-[250px] h-full object-scale-down"
+                          controls
+                        />
+                      )}
+                    </div>
                     <p className="text-sm font-normal leading-snug">
                       {msg.text}
                     </p>
