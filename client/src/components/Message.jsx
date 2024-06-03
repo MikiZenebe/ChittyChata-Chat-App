@@ -7,6 +7,7 @@ import { FaAngleLeft, FaImage, FaPlus, FaVideo } from "react-icons/fa";
 import uploadFile from "../helpers/uploadFile";
 import { IoClose, IoSend } from "react-icons/io5";
 import moment from "moment";
+import Sample from "../assets/alex.jpg";
 
 export default function Message() {
   const params = useParams();
@@ -183,61 +184,7 @@ export default function Message() {
 
       <section className="h-[calc(100vh-64px)]  overflow-x-hidden overflow-y-scroll scrollbar flex flex-col justify-between relative ">
         {/* Upload Image Display */}
-        <div
-          onClick={() => setOpenImgVideoUpload(false)}
-          className="flex items-center justify-center h-full"
-        >
-          <div className="w-full  flex justify-center items-center">
-            {loading && (
-              <div>
-                <Loading />
-              </div>
-            )}
-          </div>
-          <>
-            {message.imageUrl && (
-              <div className="w-full h-full sticky bottom-0 bg-slate-700/30 flex justify-center items-center rounded overflow-hidden">
-                <div
-                  onClick={handleClearUploadImage}
-                  className="w-fit p-2 absolute top-0 right-0 cursor-pointer text-white hover:text-blue-500"
-                >
-                  <IoClose size={25} />
-                </div>
-                <div className="bg-white p-3 rounded">
-                  <img
-                    src={message.imageUrl}
-                    alt="uploadImg"
-                    width={300}
-                    height={100}
-                    className="aspect-square w-full h-full max-w-sm m-2 object-scale-down"
-                  />
-                </div>
-              </div>
-            )}
-          </>
-          {/* Upload Video Display */}
-          <>
-            {message.videoUrl && (
-              <div className="w-full h-full sticky bottom-0 bg-slate-700/30 flex justify-center items-center rounded overflow-hidden">
-                <div
-                  onClick={handleClearUploadVideo}
-                  className="w-fit p-2 absolute top-0 right-0 cursor-pointer text-white hover:text-blue-500"
-                >
-                  <IoClose size={25} />
-                </div>
-                <div className="bg-white p-3 rounded">
-                  <video
-                    src={message.videoUrl}
-                    width={300}
-                    height={300}
-                    alt="videoUpload"
-                    className="aspect-video w-full h-full max-w-sm m-2"
-                  />
-                </div>
-              </div>
-            )}
-          </>
-        </div>
+
         {/**send message */}
 
         {/* All Message */}
@@ -270,6 +217,58 @@ export default function Message() {
               </div>
             );
           })}
+        </div>
+
+        <div className="w-full  flex justify-center items-center">
+          {loading && (
+            <div>
+              <Loading />
+            </div>
+          )}
+        </div>
+
+        <div>
+          {message.imageUrl && (
+            <div className="w-full h-full fixed backdrop-blur-sm top-0  right-0 bg-white-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden">
+              <div
+                onClick={handleClearUploadImage}
+                className="w-fit p-2 absolute top-0 right-0 cursor-pointer text-black hover:text-blue-500"
+              >
+                <IoClose size={25} />
+              </div>
+              <div className="bg-white p-3 rounded">
+                <img
+                  src={message.imageUrl}
+                  alt="uploadImg"
+                  width={300}
+                  height={100}
+                  className="aspect-square w-full h-full max-w-sm m-2 object-scale-down"
+                />
+              </div>
+            </div>
+          )}
+        </div>
+        {/* Upload Video Display */}
+        <div>
+          {message.videoUrl && (
+            <div className="w-full h-full fixed backdrop-blur-sm top-0  right-0 bg-white-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden">
+              <div
+                onClick={handleClearUploadVideo}
+                className="w-fit p-2 absolute top-0 right-0 cursor-pointer text-black hover:text-blue-500"
+              >
+                <IoClose size={25} />
+              </div>
+              <div className="bg-white p-3 rounded">
+                <video
+                  src={message.videoUrl}
+                  width={300}
+                  height={300}
+                  alt="videoUpload"
+                  className="aspect-video w-full h-full max-w-sm m-2"
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="bg-bgMessage  sticky bottom-0 top-0">
