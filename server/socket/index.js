@@ -51,6 +51,18 @@ io.on("connection", async (socket) => {
     };
 
     socket.emit("message-user", payload);
+
+    //Previous Message
+    const getConversation = await ConversationModel.findOne({
+      $or: [
+        { sender: user?._id, receiver: userId },
+        { sender: userId, receiver: user?._id },
+      ],
+    })
+      .populate("messages")
+      .sort({ updatedAt: -1 });
+
+    socket.emit("message", getConversation?.messages || []);
   });
 
   //new message
@@ -94,24 +106,33 @@ io.on("connection", async (socket) => {
         },
       }
     );
+  });
 
-    const getConversation = await ConversationModel.findOne({
-      $or: [
-        {
-          sender: data?.sender,
-          receiver: data?.receiver,
-        },
-        {
-          sender: data?.receiver,
-          receiver: data?.sender,
-        },
-      ],
+  //Sidebar
+  socket.on("sidebar", async (currentUserId) => {
+    const currentUserConv = await ConversationModel.find({
+      $or: [{ sender: currentUserId }, { receiver: currentUserId }],
     })
+      .sort({ updatedAt: -1 })
       .populate("messages")
-      .sort({ updatedAt: -1 });
+      .populate("reciver");
 
-    io.to(data?.sender).emit("message", getConversation.messages);
-    io.to(data?.receiver).emit("message", getConversation.messages);
+    const conversation = currentUserConv.map((conv) => {
+      const countUnseenMsg = conv.messages.reduce(
+        (prev, curr) => prev + (curr.seen ? 0 : 1),
+        0
+      );
+
+      return {
+        _id: conv._id,
+        sender: conv.sender,
+        receiver: conv.receiver,
+        unseenMsg: countUnseenMsg,
+        lastMsg: conv.messages[conv.messages.length - 1],
+      };
+    });
+
+    socket.emit("conversation", conversation);
   });
 
   //disconnect

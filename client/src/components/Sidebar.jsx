@@ -5,7 +5,7 @@ import { FiArrowUpLeft } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
 import { Avatar, EditUser, SearchUser } from "../components/index";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import logo from "../assets/logo.png";
 
 export default function Sidebar() {
@@ -13,6 +13,19 @@ export default function Sidebar() {
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [allUser, setAllUser] = useState([]);
   const [searchUser, setSearchUser] = useState(false);
+  const socketConnection = useSelector(
+    (state) => state?.user?.socketConnection
+  );
+
+  useEffect(() => {
+    if (socketConnection) {
+      socketConnection.emit("sidebar", user._id);
+
+      socketConnection.on("conversation", (data) => {
+        console.log("conversation", data);
+      });
+    }
+  }, [socketConnection, user._id]);
 
   return (
     <div className="w-full h-full grid grid-cols-[48px,1fr]">

@@ -7,7 +7,6 @@ import { FaAngleLeft, FaImage, FaPlus, FaVideo } from "react-icons/fa";
 import uploadFile from "../helpers/uploadFile";
 import { IoClose, IoSend } from "react-icons/io5";
 import moment from "moment";
-import Sample from "../assets/alex.jpg";
 
 export default function Message() {
   const params = useParams();
