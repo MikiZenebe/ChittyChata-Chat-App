@@ -22,10 +22,19 @@ export default function Sidebar() {
       socketConnection.emit("sidebar", user._id);
 
       socketConnection.on("conversation", (data) => {
-        console.log("conversation", data);
+        const conversationUserData = data.map((convUser, i) => {
+          if (convUser.sender?._id === convUser.receiver?._id) {
+            return { ...convUser, userDetails: convUser.sender };
+          } else if (convUser.receiver._id !== user._id) {
+            return { ...convUser, userDetails: convUser.receiver };
+          } else {
+            return { ...convUser, userDetails: convUser.sender };
+          }
+        });
+        setAllUser(conversationUserData);
       });
     }
-  }, [socketConnection, user._id]);
+  }, [socketConnection, user, allUser]);
 
   return (
     <div className="w-full h-full grid grid-cols-[48px,1fr]">
@@ -99,6 +108,16 @@ export default function Sidebar() {
               </p>
             </div>
           )}
+
+          {allUser.map((conv, i) => {
+            return (
+              <div key={i}>
+                <div>
+                  <Avatar imageUrl={conv.userDetails.profile_pic} />
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 

@@ -115,7 +115,8 @@ io.on("connection", async (socket) => {
     })
       .sort({ updatedAt: -1 })
       .populate("messages")
-      .populate("reciver");
+      .populate("sender")
+      .populate("receiver");
 
     const conversation = currentUserConv.map((conv) => {
       const countUnseenMsg = conv.messages.reduce(
