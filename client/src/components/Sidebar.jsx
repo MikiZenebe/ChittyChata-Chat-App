@@ -22,7 +22,7 @@ export default function Sidebar() {
       socketConnection.emit("sidebar", user._id);
 
       socketConnection.on("conversation", (data) => {
-        const conversationUserData = data.map((convUser, i) => {
+        const conversationUserData = data.map((convUser) => {
           if (convUser.sender?._id === convUser.receiver?._id) {
             return { ...convUser, userDetails: convUser.sender };
           } else if (convUser.receiver._id !== user._id) {
@@ -34,7 +34,7 @@ export default function Sidebar() {
         setAllUser(conversationUserData);
       });
     }
-  }, [socketConnection, user, allUser]);
+  }, [socketConnection, user]);
 
   return (
     <div className="w-full h-full grid grid-cols-[48px,1fr]">
@@ -149,6 +149,10 @@ export default function Sidebar() {
                     <p className="text-sm">{conv?.lastMsg.text}</p>
                   </div>
                 </div>
+
+                <p className="text-xs font-semibold ml-auto p-1 bg-cyan-600 text-white rounded-full h-6 w-6 flex  justify-center text-center items-center">
+                  {conv?.unseenMsg}
+                </p>
               </div>
             );
           })}
