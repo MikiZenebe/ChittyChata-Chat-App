@@ -1,5 +1,5 @@
 import { IoChatbubbleEllipses } from "react-icons/io5";
-import { FaUserPlus } from "react-icons/fa";
+import { FaImage, FaUserPlus, FaVideo } from "react-icons/fa";
 import { BiLogOut } from "react-icons/bi";
 import { FiArrowUpLeft } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
@@ -111,9 +111,43 @@ export default function Sidebar() {
 
           {allUser.map((conv, i) => {
             return (
-              <div key={i}>
+              <div key={i} className="flex items-center gap-2 p-3">
                 <div>
-                  <Avatar imageUrl={conv.userDetails.profile_pic} />
+                  <Avatar
+                    imageUrl={conv.userDetails.profile_pic}
+                    name={conv?.userDetails.name}
+                    width={40}
+                    height={40}
+                  />
+                </div>
+
+                <div>
+                  <h3 className="text-ellipsis line-clamp-1 font-semibold">
+                    {conv.userDetails?.name}
+                  </h3>
+
+                  <div className="text-slate-500 text-xs items-center gap-1">
+                    <div className="flex items-center gap-2">
+                      {conv?.lastMsg.imageUrl && (
+                        <div className="flex items-center gap-1">
+                          <span>
+                            <FaImage />
+                          </span>
+                          {!conv?.lastMsg.text && <span>Image</span>}
+                        </div>
+                      )}
+
+                      {conv?.lastMsg.videoUrl && (
+                        <div className="flex items-center gap-1">
+                          <span>
+                            <FaVideo />
+                          </span>
+                          {!conv?.lastMsg.text && <span>Video</span>}
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-sm">{conv?.lastMsg.text}</p>
+                  </div>
                 </div>
               </div>
             );
