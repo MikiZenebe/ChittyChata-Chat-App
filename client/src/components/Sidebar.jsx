@@ -2,11 +2,12 @@ import { IoChatbubbleEllipses } from "react-icons/io5";
 import { FaImage, FaUserPlus, FaVideo } from "react-icons/fa";
 import { BiLogOut } from "react-icons/bi";
 import { FiArrowUpLeft } from "react-icons/fi";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Avatar, EditUser, SearchUser } from "../components/index";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import logo from "../assets/logo.png";
+import { logOut } from "../redux/userSlice";
 
 export default function Sidebar() {
   const user = useSelector((state) => state.user);
@@ -16,6 +17,8 @@ export default function Sidebar() {
   const socketConnection = useSelector(
     (state) => state?.user?.socketConnection
   );
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (socketConnection) {
@@ -35,6 +38,12 @@ export default function Sidebar() {
       });
     }
   }, [socketConnection, user]);
+
+  const handleLogOut = () => {
+    dispatch(logOut());
+    navigate("/email");
+    localStorage.clear();
+  };
 
   return (
     <div className="w-full h-full grid grid-cols-[48px,1fr]">
@@ -77,6 +86,7 @@ export default function Sidebar() {
             />
           </button>
           <button
+            onClick={handleLogOut}
             title="logout"
             className="w-12 h-12 text-slate-400 flex justify-center items-center cursor-pointer rounded hover:text-blue-400 transition-all ease-in-out"
           >
@@ -89,9 +99,9 @@ export default function Sidebar() {
         <div>
           <h2 className="text-lg font-bold p-[18.5px]">
             Message
-            <span className="text-sm font-normal text-blue-400 ml-1">
-              48 <span className="text-xs">New</span>
-            </span>
+            {/* <span className="text-sm font-semibold text-blue-400 ml-1">
+              {allUser.length} <span className="text-xs">New</span>
+            </span> */}
           </h2>
         </div>
 
@@ -111,7 +121,11 @@ export default function Sidebar() {
 
           {allUser.map((conv, i) => {
             return (
-              <div key={i} className="flex items-center gap-2 p-3">
+              <NavLink
+                to={`/${conv?.userDetails?._id}`}
+                key={i}
+                className="flex items-center gap-2 p-3"
+              >
                 <div>
                   <Avatar
                     imageUrl={conv.userDetails.profile_pic}
@@ -128,32 +142,34 @@ export default function Sidebar() {
 
                   <div className="text-slate-500 text-xs items-center gap-1">
                     <div className="flex items-center gap-2">
-                      {conv?.lastMsg.imageUrl && (
+                      {conv?.lastMsg?.imageUrl && (
                         <div className="flex items-center gap-1">
                           <span>
                             <FaImage />
                           </span>
-                          {!conv?.lastMsg.text && <span>Image</span>}
+                          {!conv?.lastMsg?.text && <span>Image</span>}
                         </div>
                       )}
 
-                      {conv?.lastMsg.videoUrl && (
+                      {conv?.lastMsg?.videoUrl && (
                         <div className="flex items-center gap-1">
                           <span>
                             <FaVideo />
                           </span>
-                          {!conv?.lastMsg.text && <span>Video</span>}
+                          {!conv?.lastMsg?.text && <span>Video</span>}
                         </div>
                       )}
                     </div>
-                    <p className="text-sm">{conv?.lastMsg.text}</p>
+                    <p className="text-sm">{conv?.lastMsg?.text}</p>
                   </div>
                 </div>
 
-                <p className="text-xs font-semibold ml-auto p-1 bg-cyan-600 text-white rounded-full h-6 w-6 flex  justify-center text-center items-center">
-                  {conv?.unseenMsg}
-                </p>
-              </div>
+                {conv?.unseenMsg ? (
+                  <p className="text-xs font-semibold ml-auto p-1 bg-cyan-600 text-white rounded-full h-6 w-6 flex  justify-center text-center items-center">
+                    {conv?.unseenMsg}
+                  </p>
+                ) : null}
+              </NavLink>
             );
           })}
         </div>

@@ -7,6 +7,7 @@ import {
   ConversationModel,
   MessageModel,
 } from "../models/ConversationModel.js";
+import getConversation from "../helpers/getConversation.js";
 
 const app = express();
 
@@ -87,7 +88,7 @@ io.on("connection", async (socket) => {
         sender: data?.sender,
         receiver: data?.receiver,
       });
-      conversation = await createConversation.save();
+      let conversation = await createConversation.save();
     }
 
     const message = new MessageModel({
@@ -121,41 +122,52 @@ io.on("connection", async (socket) => {
       "message",
       getConversationMessage?.messages || []
     );
+
+    //Send Conversation
+    const conversationSender = await getConversation(data?.sender);
+    const conversationReceiver = await getConversation(data?.receiver);
+
+    socket.emit("conversation", conversationSender);
+
+    io.to(data?.sender).emit("conversation", conversationSender);
+    io.to(data?.receiver).emit("conversation", conversationReceiver);
   });
 
   //Sidebar
   socket.on("sidebar", async (currentUserId) => {
-    if (currentUserId) {
-      const currentUserConv = await ConversationModel.find({
-        $or: [{ sender: currentUserId }, { receiver: currentUserId }],
-      })
-        .sort({ updatedAt: -1 })
-        .populate("messages")
-        .populate("sender")
-        .populate("receiver");
+    const conversation = await getConversation(currentUserId);
 
-      const conversation = currentUserConv.map((conv) => {
-        const countUnseenMsg = conv.messages.reduce(
-          (prev, curr) => prev + (curr.seen ? 0 : 1),
-          0
-        );
+    socket.emit("conversation", conversation);
+  });
 
-        return {
-          _id: conv._id,
-          sender: conv.sender,
-          receiver: conv.receiver,
-          unseenMsg: countUnseenMsg,
-          lastMsg: conv.messages[conv.messages.length - 1],
-        };
-      });
+  socket.on("seen", async (msgByUserId) => {
+    let conversation = await ConversationModel.findOne({
+      $or: [
+        { sender: user?._id, receiver: msgByUserId },
+        { sender: msgByUserId, receiver: user?._id },
+      ],
+    });
 
-      socket.emit("conversation", conversation);
-    }
+    const conversationMessageId = conversation?.messages || [];
+
+    const updateMessages = await MessageModel.updateMany(
+      {
+        _id: { $in: conversationMessageId },
+        msgByUserId: msgByUserId,
+      },
+      { $set: { seen: true } }
+    );
+    //send conversation
+    const conversationSender = await getConversation(user?._id?.toString());
+    const conversationReceiver = await getConversation(msgByUserId);
+
+    io.to(user?._id?.toString()).emit("conversation", conversationSender);
+    io.to(msgByUserId).emit("conversation", conversationReceiver);
   });
 
   //disconnect
   socket.on("disconnect", () => {
-    onlineUser.delete(user._id);
+    onlineUser.delete(user._id?.toString());
     console.log("disconnectd user", socket.id);
   });
 });
