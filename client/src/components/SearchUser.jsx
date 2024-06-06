@@ -52,7 +52,9 @@ export default function SearchUser({ onClose }) {
 
         {/* Display Search user */}
         <div className="bg-white mt-2 w-full p-3 rounded">
-          {searchUser.length === 0 && !loading && <p>no user found!</p>}
+          {searchUser.length === 0 && !loading && (
+            <p className="text-center">no user found 😌!</p>
+          )}
 
           {loading && <Loading />}
 

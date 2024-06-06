@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setUser } from "../redux/userSlice";
 import Divider from "./Divider";
+import { motion } from "framer-motion";
 
 export default function EditUser({ onClose, user }) {
   const uploadPhotoRef = useRef();
@@ -69,7 +70,12 @@ export default function EditUser({ onClose, user }) {
   };
 
   return (
-    <div className="fixed top-0 left-0 bottom-0 right-0 bg-gray-700 bg-opacity-40 flex items-center justify-center z-10 transition-all duration-[300ms] ease-in-out">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed top-0 left-0 bottom-0 right-0 bg-gray-700 bg-opacity-40 flex items-center justify-center z-10 transition-all duration-[300ms] ease-in-out"
+    >
       <div className="bg-white p-4 py-6 m-1 rounded w-full max-w-sm">
         <h2 className="font-semibold text-lg">Profile Details</h2>
 
@@ -101,7 +107,7 @@ export default function EditUser({ onClose, user }) {
             />
           </div>
 
-          <div className="flex items-center gap-3">
+          <motion.div layout className="flex items-center gap-3">
             <Avatar
               width={40}
               height={40}
@@ -124,7 +130,7 @@ export default function EditUser({ onClose, user }) {
                 ref={uploadPhotoRef}
               />
             </label>
-          </div>
+          </motion.div>
 
           <Divider />
           <div className="flex gap-2 w-fit ml-auto ">
@@ -143,6 +149,6 @@ export default function EditUser({ onClose, user }) {
           </div>
         </form>
       </div>
-    </div>
+    </motion.div>
   );
 }

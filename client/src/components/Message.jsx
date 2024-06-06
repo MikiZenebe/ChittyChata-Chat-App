@@ -7,6 +7,7 @@ import { FaAngleLeft, FaImage, FaPlus, FaVideo } from "react-icons/fa";
 import uploadFile from "../helpers/uploadFile";
 import { IoClose, IoSend } from "react-icons/io5";
 import moment from "moment";
+import { motion } from "framer-motion";
 
 export default function Message() {
   const params = useParams();
@@ -198,7 +199,10 @@ export default function Message() {
                     user._id === msg.msgByUserId ? "ml-auto" : ""
                   }`}
                 >
-                  <div
+                  <motion.div
+                    animate={{ scale: 1, rotateZ: 0, opacity: 1 }}
+                    initial={{ scale: 0.5, rotateZ: -10, opacity: 0 }}
+                    exit={{ scale: 0.5, rotateZ: -10, opacity: 0 }}
                     className={`px-3.5 py-2  items-center gap-3 ${
                       user._id === msg.msgByUserId
                         ? "rounded-xl rounded-br-none bg text-white"
@@ -223,7 +227,7 @@ export default function Message() {
                     <p className="text-sm font-normal leading-snug">
                       {msg.text}
                     </p>
-                  </div>
+                  </motion.div>
                   <div className="ml-auto w-fit items-center inline-flex mb-2.5">
                     <h6 className="text-gray-500 text-xs font-normal leading-4 py-1">
                       {moment(msg.createdAt).format("hh:mm")}
