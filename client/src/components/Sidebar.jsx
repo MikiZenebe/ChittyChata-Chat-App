@@ -54,13 +54,13 @@ export default function Sidebar() {
           </div>
           <NavLink
             className={({ isActive }) =>
-              `w-12 h-12  text-slate-400 flex justify-center items-center cursor-pointer rounded hover:text-blue-400 transition-all ease-in-out ${
-                isActive && "text-blue-400 "
+              `w-10 h-10 mx-auto  text-slate-400 flex justify-center items-center cursor-pointer rounded  transition-all ease-in-out ${
+                isActive && "bg text-white"
               }`
             }
             title="chat"
           >
-            <IoChatbubbleEllipses size={25} />
+            <IoChatbubbleEllipses size={22} />
           </NavLink>
 
           <div
@@ -68,7 +68,7 @@ export default function Sidebar() {
             className="w-12 h-12 text-slate-400 flex justify-center items-center cursor-pointer rounded hover:text-blue-400 transition-all ease-in-out"
             title="user"
           >
-            <FaUserPlus size={25} />
+            <FaUserPlus size={22} />
           </div>
         </div>
 
@@ -124,7 +124,11 @@ export default function Sidebar() {
               <NavLink
                 to={`/${conv?.userDetails?._id}`}
                 key={i}
-                className="flex items-center gap-2 p-3"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 p-3 cursor-pointer rounded  transition-all ease-in-out ${
+                    isActive && "bgActive my-2 mx-2 text-white"
+                  }`
+                }
               >
                 <div>
                   <Avatar

@@ -21,11 +21,15 @@ code {
 .bg {
   background: linear-gradient(to left top, #46a4ec, #118da7 70%);
 }
+
+.bgActive {
+  background: linear-gradient(to left top, #46a4ec7e, #118ea783 70%);
+}
 .bgHover:hover {
   background: linear-gradient(to left top, #46a4ec, #118da7 70%);
 }
 .bgMessage {
-  background: linear-gradient(to left top, #edd1e7, #f5dad3 80%);
+  background: linear-gradient(to left top, #edd1e7b2, #f5dad3b4 80%);
 }
 
 /* .textGrad {
