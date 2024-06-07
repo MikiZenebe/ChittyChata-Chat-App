@@ -21,15 +21,12 @@ app.use(
 app.use("/api", userRoutes);
 app.use("/api", checkRoutes);
 
-const PORT = process.env.PORT || 5000;
-
-server.listen(PORT, () => {
-  console.log("Server running at " + PORT);
+server.listen(() => {
   connectDB();
 });
 
 app.get("/", (req, res) => {
   res.json({
-    message: "Server is running at " + PORT,
+    message: "Server is running",
   });
 });
