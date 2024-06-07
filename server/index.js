@@ -6,6 +6,7 @@ import connectDB from "./config/connectDB.js";
 import userRoutes from "./routes/userRoutes.js";
 import checkRoutes from "./routes/checkRoutes.js";
 import { app, server } from "./socket/socket.js";
+import path from "path";
 
 dotenv.config();
 app.use(express.json());
