@@ -5,14 +5,14 @@ import dotenv from "dotenv";
 import connectDB from "./config/connectDB.js";
 import userRoutes from "./routes/userRoutes.js";
 import checkRoutes from "./routes/checkRoutes.js";
-import { app, server } from "./socket/index.js";
+import { app, server } from "./socket/socket.js";
 
 dotenv.config();
 app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: "https://chitty-chata.vercel.app/",
     credentials: true,
   })
 );
