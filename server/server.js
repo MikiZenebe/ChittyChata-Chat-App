@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import connectDB from "./src/db/connectDB.js";
+import userRoutes from "./src/routes/userRoutes.js";
 import { createServer } from "node:http";
 
 dotenv.config();
@@ -20,6 +21,9 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+//routes
+app.use("/api/users", userRoutes);
 
 const server = async () => {
   try {
