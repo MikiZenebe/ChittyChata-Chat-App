@@ -6,11 +6,13 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { apiClient } from "@/lib/api-client";
 import { LOGIN_ROUTE, SIGUP_ROUTE } from "@/utils/constants";
+import { useNavigate } from "react-router-dom";
 
 export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
+  const navigate = useNavigate();
 
   const validateSignup = () => {
     if (!email.length || !password.length) {
@@ -58,7 +60,11 @@ export default function Auth() {
           withCredentials: true,
         }
       );
-      console.log(res);
+      if (res.data.user._id) {
+        if (res.data.profileSetup) navigate("/chat");
+        else navigate("/profile");
+      }
+
       toast.success("Logged in successfully 🚀🚀", {
         classNames: {
           toast: "group-[.toaster]:bg-green-500 group-[.toaster]:text-white",
@@ -77,7 +83,11 @@ export default function Auth() {
           withCredentials: true,
         }
       );
-      console.log(res);
+
+      if (res.status === 201) {
+        navigate("/profile");
+      }
+
       toast.success("Registerd successfully 🚀🚀", {
         classNames: {
           toast: "group-[.toaster]:bg-green-500 group-[.toaster]:text-white",
@@ -104,7 +114,7 @@ export default function Auth() {
           </div>
 
           <div className="flex items-center justify-center w-full">
-            <Tabs className="w-3/4">
+            <Tabs className="w-3/4" defaultValue="login">
               <TabsList className="bg-transparent rounded-none w-full">
                 <TabsTrigger
                   value="login"
