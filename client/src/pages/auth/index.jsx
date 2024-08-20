@@ -1,12 +1,11 @@
-import BG from "@/assets/login2.png";
-import Victory from "@/assets/victory.svg";
+import logo from "@/assets/chat.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import { toast } from "sonner";
 import { apiClient } from "@/lib/api-client";
-import { SIGUP_ROUTE } from "@/utils/constants";
+import { LOGIN_ROUTE, SIGUP_ROUTE } from "@/utils/constants";
 
 export default function Auth() {
   const [email, setEmail] = useState("");
@@ -36,12 +35,48 @@ export default function Auth() {
 
     return true;
   };
+  const validateLogin = () => {
+    if (!email.length || !password.length) {
+      toast.error("Check Email & Password", {
+        classNames: {
+          toast: "group-[.toaster]:bg-red-500 group-[.toaster]:text-white",
+          closeButton: "group-[.toaster]:bg-primary",
+        },
+      });
+      return false;
+    }
 
-  const handleLogin = async () => {};
+    return true;
+  };
+
+  const handleLogin = async () => {
+    if (validateLogin()) {
+      const res = await apiClient.post(
+        LOGIN_ROUTE,
+        { email, password },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(res);
+      toast.success("Logged in successfully 🚀🚀", {
+        classNames: {
+          toast: "group-[.toaster]:bg-green-500 group-[.toaster]:text-white",
+          closeButton: "group-[.toaster]:bg-primary",
+        },
+      });
+    }
+  };
 
   const handleSignup = async () => {
     if (validateSignup()) {
-      const res = await apiClient.post(SIGUP_ROUTE, { email, password });
+      const res = await apiClient.post(
+        SIGUP_ROUTE,
+        { email, password },
+        {
+          withCredentials: true,
+        }
+      );
       console.log(res);
       toast.success("Registerd successfully 🚀🚀", {
         classNames: {
@@ -54,16 +89,17 @@ export default function Auth() {
 
   return (
     <div className="h-[100vh] w-[100vw] flex items-center justify-center">
-      <div className="h-[90vh] bg-white border-2 border-slate-200 rounded-3xl text-opacity-90 w-[80vw] md:w-[90vw] lg:w-[70vw] xl:w-[60vw] grid xl:grid-cols-2 p-6">
-        <div className="flex flex-col gap-5 items-center justify-center">
-          <div className="flex items-center justify-center flex-col">
-            <div className="flex items-center justify-center">
-              <h1 className="text-4xl font-bold md:text-5xl">Welcome</h1>
-              <img src={Victory} alt="Victory emoji" className="h-[100px]" />
+      <div className="h-auto bg-white border-2 border-slate-200 rounded-3xl text-opacity-90 w-[80vw] md:w-[90vw] lg:w-[50vw]   p-6 py-8 mx-auto">
+        <div className="flex flex-col gap-5 items-center justify-center ">
+          <div className="flex items-center justify-center flex-col gap-3">
+            <div className="flex items-center justify-center gap-2">
+              <img src={logo} alt="Victory emoji" className="h-[40px]" />
+              <h1 className="text-4xl font-bold md:text-5xl">ቡና ሰዓት</h1>
+              <img src={logo} alt="Victory emoji" className="h-[40px]" />
             </div>
 
             <p className="font-medium text-center">
-              Fill in the details to get started with the best chat app!
+              Welcome and get start to with the best chat app!
             </p>
           </div>
 
@@ -72,13 +108,13 @@ export default function Auth() {
               <TabsList className="bg-transparent rounded-none w-full">
                 <TabsTrigger
                   value="login"
-                  className="data-[state=active]:bg-transparent text-black text-opacity-90 border-b-2 rounded-none w-full data-[state=active]:text-black data-[state=active]:font-semibold data-[state=active]:border-b-orange-400 p-3 transition-all duration-300"
+                  className="data-[state=active]:bg-transparent text-black text-opacity-90 border-b-2 rounded-none w-full data-[state=active]:text-black data-[state=active]:font-semibold data-[state=active]:border-b-[#23B9F6] p-3 transition-all duration-300"
                 >
                   Login
                 </TabsTrigger>
                 <TabsTrigger
                   value="signup"
-                  className="data-[state=active]:bg-transparent text-black text-opacity-90 border-b-2 rounded-none w-full data-[state=active]:text-black data-[state=active]:font-semibold data-[state=active]:border-b-orange-400 p-3 transition-all duration-300"
+                  className="data-[state=active]:bg-transparent text-black text-opacity-90 border-b-2 rounded-none w-full data-[state=active]:text-black data-[state=active]:font-semibold data-[state=active]:border-b-[#23B9F6] p-3 transition-all duration-300"
                 >
                   Signup
                 </TabsTrigger>
@@ -87,7 +123,7 @@ export default function Auth() {
                 <Input
                   placeholder="Email"
                   type="email"
-                  className="rounded-full p-6 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+                  className="rounded-full p-6 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-[#4AD1F9] focus:border-transparent"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -95,14 +131,14 @@ export default function Auth() {
                 <Input
                   placeholder="Password"
                   type="password"
-                  className="rounded-full p-6 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+                  className="rounded-full p-6 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-[#4AD1F9] focus:border-transparent"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
 
                 <Button
                   onClick={handleLogin}
-                  className="rounded-full p-6 bg-orange-400 transition-all duration-300 ease-out"
+                  className="rounded-full p-6 btn transition-all duration-300 ease-out"
                 >
                   Login
                 </Button>
@@ -111,7 +147,7 @@ export default function Auth() {
                 <Input
                   placeholder="Email"
                   type="email"
-                  className="rounded-full p-6 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+                  className="rounded-full p-6 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-[#4AD1F9] focus:border-transparent"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -119,31 +155,27 @@ export default function Auth() {
                 <Input
                   placeholder="Password"
                   type="password"
-                  className="rounded-full p-6 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+                  className="rounded-full p-6 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-[#4AD1F9] focus:border-transparent"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <Input
                   placeholder="Confirm Password"
                   type="password"
-                  className="rounded-full p-6 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+                  className="rounded-full p-6 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-[#4AD1F9] focus:border-transparent"
                   value={confirmPass}
                   onChange={(e) => setConfirmPass(e.target.value)}
                 />
 
                 <Button
                   onClick={handleSignup}
-                  className="rounded-full p-6 bg-orange-400 transition-all duration-300 ease-out"
+                  className="rounded-full p-6 btn transition-all duration-300 ease-out"
                 >
                   Signup
                 </Button>
               </TabsContent>
             </Tabs>
           </div>
-        </div>
-
-        <div className="justify-center items-center hidden xl:flex">
-          <img src={BG} alt="background login" className="h-[500px]" />
         </div>
       </div>
     </div>

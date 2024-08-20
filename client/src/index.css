@@ -66,4 +66,7 @@
   body {
     @apply bg-background text-foreground;
   }
+  .btn {
+    @apply bg-gradient-to-r from-[#62E1FB] to-[#27BBF6] hover:ring-2 hover:ring-blue-300;
+  }
 }
