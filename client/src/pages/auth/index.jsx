@@ -7,11 +7,13 @@ import { toast } from "sonner";
 import { apiClient } from "@/lib/api-client";
 import { LOGIN_ROUTE, SIGUP_ROUTE } from "@/utils/constants";
 import { useNavigate } from "react-router-dom";
+import { useAppStore } from "@/store";
 
 export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
+  const { setUserInfo } = useAppStore();
   const navigate = useNavigate();
 
   const validateSignup = () => {
@@ -61,6 +63,7 @@ export default function Auth() {
         }
       );
       if (res.data.user._id) {
+        setUserInfo(res.data.user);
         if (res.data.profileSetup) navigate("/chat");
         else navigate("/profile");
       }
@@ -85,6 +88,7 @@ export default function Auth() {
       );
 
       if (res.status === 201) {
+        setUserInfo(res.data.user);
         navigate("/profile");
       }
 
