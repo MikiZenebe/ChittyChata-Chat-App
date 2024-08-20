@@ -8,9 +8,20 @@ export const signup = async (req, res, next) => {
       return res.status(400).send("Email & Password is required");
     }
 
-    const user = await User.create({ email, password });
-    res.cookie("jwt", genToken(email, user._id));
-    return res.status(201).json({ user: { id: user._id, email: user.email } });
+    const user = new User({
+      email,
+      password,
+    });
+
+    if (user) {
+      genToken(user._id, res);
+      await user.save();
+      res.status(201).json({
+        user,
+      });
+    } else {
+      res.status(400).json({ error: "Invalid user data" });
+    }
   } catch (error) {
     console.log({ error });
     return res.status(500).send("Internal Server Error");

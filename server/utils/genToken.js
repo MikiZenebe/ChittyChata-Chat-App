@@ -1,11 +1,16 @@
 import jwt from "jsonwebtoken";
 
-const genToken = (email, userId) => {
+const genToken = (userId, res) => {
   const maxAge = 3 * 24 * 60 * 60 * 1000;
-  return jwt.sign({ email, userId }, process.env.JWT_KEY, {
+  const token = jwt.sign({ userId }, process.env.JWT_KEY, {
     expiresIn: maxAge,
+  });
+
+  res.cookie("jwt", token, {
+    maxAge: 15 * 24 * 60 * 60 * 1000, //MS
+    httpOnly: true, // prevent XSS attacks cross-site scripting attacks
+    sameSite: "strict", // CSRF attacks cross-site request forgery attacks
     secure: true,
-    sameSite: "None",
   });
 };
 

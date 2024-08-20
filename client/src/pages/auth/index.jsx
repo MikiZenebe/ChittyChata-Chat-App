@@ -4,15 +4,53 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
+import { toast } from "sonner";
+import { apiClient } from "@/lib/api-client";
+import { SIGUP_ROUTE } from "@/utils/constants";
 
 export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
 
+  const validateSignup = () => {
+    if (!email.length || !password.length) {
+      toast.error("Check Email & Password", {
+        classNames: {
+          toast: "group-[.toaster]:bg-red-500 group-[.toaster]:text-white",
+          closeButton: "group-[.toaster]:bg-primary",
+        },
+      });
+      return false;
+    }
+
+    if (password !== confirmPass) {
+      toast.error("Password & confirm password should be matched", {
+        classNames: {
+          toast: "group-[.toaster]:bg-red-500 group-[.toaster]:text-white",
+          closeButton: "group-[.toaster]:bg-primary",
+        },
+      });
+      return false;
+    }
+
+    return true;
+  };
+
   const handleLogin = async () => {};
 
-  const handleSignup = async () => {};
+  const handleSignup = async () => {
+    if (validateSignup()) {
+      const res = await apiClient.post(SIGUP_ROUTE, { email, password });
+      console.log(res);
+      toast.success("Registerd successfully 🚀🚀", {
+        classNames: {
+          toast: "group-[.toaster]:bg-green-500 group-[.toaster]:text-white",
+          closeButton: "group-[.toaster]:bg-primary",
+        },
+      });
+    }
+  };
 
   return (
     <div className="h-[100vh] w-[100vw] flex items-center justify-center">
