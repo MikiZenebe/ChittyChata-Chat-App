@@ -1,5 +1,5 @@
 import { useAppStore } from "@/store";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
@@ -7,6 +7,9 @@ import { colors, getColor } from "@/lib/utils";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { apiClient } from "@/lib/api-client";
+import { ADD_PROFILE_IMG_ROUTE, UPDATE_PROFILE_ROUTE } from "@/utils/constants";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -15,15 +18,125 @@ export default function Profile() {
   const [image, setImage] = useState(null);
   const [hoverd, setHoverd] = useState(false);
   const [selectedColor, setSelectedColor] = useState(0);
-  const { userInfo } = useAppStore();
+  const { userInfo, setUserInfo } = useAppStore();
+  const fileInputRef = useRef(null);
 
-  const saveChanges = async () => {};
+  useEffect(() => {
+    if (userInfo.profileSetup) {
+      setFirstName(userInfo.firstName);
+      setLastName(userInfo.lastName);
+      setSelectedColor(userInfo.color);
+    }
+  }, [userInfo]);
+
+  const validateProfile = () => {
+    if (!firstName) {
+      toast.error("Firstname is required", {
+        classNames: {
+          toast: "group-[.toaster]:bg-red-500 group-[.toaster]:text-white",
+          closeButton: "group-[.toaster]:bg-primary",
+        },
+      });
+      return false;
+    }
+
+    if (!lastName) {
+      toast.error("Lastname is required", {
+        classNames: {
+          toast: "group-[.toaster]:bg-red-500 group-[.toaster]:text-white",
+          closeButton: "group-[.toaster]:bg-primary",
+        },
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  const saveChanges = async () => {
+    if (validateProfile()) {
+      try {
+        const res = await apiClient.post(
+          UPDATE_PROFILE_ROUTE,
+          {
+            firstName,
+            lastName,
+            color: selectedColor,
+          },
+          { withCredentials: true }
+        );
+
+        if (res.status === 200 && res.data) {
+          setUserInfo({ ...res.data });
+          toast.success("Profile updated successfully 🚀🚀", {
+            classNames: {
+              toast:
+                "group-[.toaster]:bg-green-500 group-[.toaster]:text-white",
+              closeButton: "group-[.toaster]:bg-primary",
+            },
+          });
+          navigate("/chat");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const handleNav = async () => {
+    if (userInfo.profileSetup) {
+      navigate("/chat");
+    } else {
+      toast.error("Please setup profile", {
+        classNames: {
+          toast: "group-[.toaster]:bg-red-500 group-[.toaster]:text-white",
+          closeButton: "group-[.toaster]:bg-primary",
+        },
+      });
+    }
+  };
+
+  const handleFileInputClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleImgChange = async (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      const formData = new FormData();
+      formData.append("profile-image", file);
+      const res = await apiClient.post(ADD_PROFILE_IMG_ROUTE, formData, {
+        withCredentials: true,
+      });
+
+      if (res.status === 200 && res.data.image) {
+        setUserInfo({ ...userInfo, image: res.data.image });
+        toast.success("Image uploaded 🚀🚀", {
+          classNames: {
+            toast: "group-[.toaster]:bg-green-500 group-[.toaster]:text-white",
+            closeButton: "group-[.toaster]:bg-primary",
+          },
+        });
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDeleteImg = async () => {};
 
   return (
     <div className="h-[100vh] flex items-center justify-center flex-col">
       <div className="p-4 flex flex-col gap-10 w-[80vw] md:w-max  border-2 border-slate-200 rounded-3xl">
         <div className="flex items-center">
-          <IoArrowBack className="text-4xl text-slate-400 cursor-pointer " />
+          <IoArrowBack
+            onClick={handleNav}
+            className="text-4xl text-slate-400 cursor-pointer "
+          />
           <h3 className="text-center mx-auto text-2xl font-bold bg-gradient-to-r from-[#62E1FB] to-[#27BBF6] inline-block text-transparent bg-clip-text">
             Setup Profile
           </h3>
@@ -56,7 +169,10 @@ export default function Profile() {
             </Avatar>
 
             {hoverd && (
-              <div className="absolute inset-4 sm:inset-8  md:inset-10 flex items-center justify-center bg-black/50 ring-fuchsia-50 cursor-pointer rounded-full transition-all duration-300 ease-out">
+              <div
+                onClick={image ? handleDeleteImg : handleFileInputClick}
+                className="absolute inset-4 sm:inset-8  md:inset-10 flex items-center justify-center bg-black/50 ring-fuchsia-50 cursor-pointer rounded-full transition-all duration-300 ease-out"
+              >
                 {image ? (
                   <FaTrash className="text-white text-3xl cursor-pointer" />
                 ) : (
@@ -65,6 +181,14 @@ export default function Profile() {
               </div>
             )}
           </div>
+          <input
+            type="file"
+            name="profile-image"
+            accept=".png, .jpg, .jpeg, .svg, .webp"
+            ref={fileInputRef}
+            className="hidden"
+            onChange={handleImgChange}
+          />
 
           <div className="flex min-w-32 md:min-w-64 flex-col gap-5 items-center justify-center">
             <div className="w-full">
