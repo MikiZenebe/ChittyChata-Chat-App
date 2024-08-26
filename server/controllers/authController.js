@@ -72,7 +72,7 @@ export const getUser = async (req, res, next) => {
 export const updateProfile = async (req, res, next) => {
   try {
     const { userId } = req;
-    const { firstName, lastName, color } = req.body;
+    const { firstName, lastName, profilePic, color } = req.body;
     if (!firstName || !lastName) {
       return res.status(404).send("Firstname, lastname & color is required");
     }
@@ -82,6 +82,7 @@ export const updateProfile = async (req, res, next) => {
         firstName,
         lastName,
         color,
+        profilePic,
         profileSetup: true,
       },
       { new: true, runValidators: true }
