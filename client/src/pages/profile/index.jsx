@@ -9,7 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { apiClient } from "@/lib/api-client";
-import { ADD_PROFILE_IMG_ROUTE, UPDATE_PROFILE_ROUTE } from "@/utils/constants";
+import {
+  ADD_PROFILE_IMG_ROUTE,
+  HOST,
+  UPDATE_PROFILE_ROUTE,
+} from "@/utils/constants";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -27,6 +31,12 @@ export default function Profile() {
       setLastName(userInfo.lastName);
       setSelectedColor(userInfo.color);
     }
+
+    if (userInfo.image) {
+      setImage(`${HOST}/${userInfo.image}`);
+    }
+
+    console.log(userInfo);
   }, [userInfo]);
 
   const validateProfile = () => {

@@ -1,6 +1,7 @@
 import User from "../models/userModel.js";
 import genToken from "../utils/genToken.js";
 import bcrypt from "bcryptjs";
+import { renameSync, unlinkSync } from "node:fs";
 
 export const signup = async (req, res, next) => {
   try {
@@ -93,6 +94,29 @@ export const updateProfile = async (req, res, next) => {
   }
 };
 
-export const addProfileImg = async (req, res, next) => {};
+export const addProfileImg = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).send("File is required");
+    }
+
+    const date = Date.now();
+    let fileName = "uploads/profiles/" + date + req.file.originalname;
+    renameSync(req.file.path, fileName);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.userId,
+      { image: fileName },
+      { new: true, runValidators: true }
+    );
+
+    return res.status(200).json({
+      image: updatedUser.image,
+    });
+  } catch (error) {
+    console.log({ error });
+    return res.status(500).send("Internal server error");
+  }
+};
 
 export const removeProfileImg = async (req, res, next) => {};
