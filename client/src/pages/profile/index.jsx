@@ -9,37 +9,39 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { apiClient } from "@/lib/api-client";
-import { UPDATE_PROFILE_ROUTE } from "@/utils/constants";
-import uploadFile from "@/lib/uploadFile";
+import {
+  ADD_PROFILE_IMG_ROUTE,
+  HOST,
+  REMOVE_PROFILE_IMG_ROUTE,
+  UPDATE_PROFILE_ROUTE,
+} from "@/utils/constants";
 
 export default function Profile() {
   const navigate = useNavigate();
   const [hoverd, setHoverd] = useState(false);
   const [selectedColor, setSelectedColor] = useState(0);
   const { userInfo, setUserInfo } = useAppStore();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [image, setImage] = useState(null);
   const fileInputRef = useRef(null);
-  const [data, setData] = useState({
-    firstName: userInfo?.firstName,
-    lastName: userInfo?.lastName,
-    profilePic: userInfo?.profilePic,
-    color: selectedColor,
-  });
 
   useEffect(() => {
     if (userInfo.profileSetup) {
-      setData((preve) => {
-        return {
-          ...preve,
-          ...userInfo,
-        };
-      });
+      setFirstName(userInfo.firstName);
+      setLastName(userInfo.lastName);
+      setSelectedColor(userInfo.color);
     }
 
-    console.log(userInfo);
+    if (userInfo.image) {
+      setImage(`${HOST}/${userInfo.image}`);
+    }
+
+    console.log(userInfo.image);
   }, [userInfo]);
 
   const validateProfile = () => {
-    if (!data.firstName) {
+    if (!firstName) {
       toast.error("Firstname is required", {
         classNames: {
           toast: "group-[.toaster]:bg-red-500 group-[.toaster]:text-white",
@@ -49,7 +51,7 @@ export default function Profile() {
       return false;
     }
 
-    if (!data.lastName) {
+    if (!lastName) {
       toast.error("Lastname is required", {
         classNames: {
           toast: "group-[.toaster]:bg-red-500 group-[.toaster]:text-white",
@@ -62,24 +64,16 @@ export default function Profile() {
     return true;
   };
 
-  const handleOnChange = (e) => {
-    const { name, value } = e.target;
-
-    setData((preve) => {
-      return {
-        ...preve,
-        [name]: value,
-      };
-    });
-  };
-
   const saveChanges = async () => {
     if (validateProfile()) {
       try {
-        const res = await apiClient.post(UPDATE_PROFILE_ROUTE, {
-          data: data,
-          withCredentials: true,
-        });
+        const res = await apiClient.post(
+          UPDATE_PROFILE_ROUTE,
+          { firstName, lastName, color: selectedColor },
+          {
+            withCredentials: true,
+          }
+        );
 
         if (res.status === 200 && res.data) {
           setUserInfo({ ...res.data });
@@ -118,16 +112,50 @@ export default function Profile() {
   const handleImgChange = async (e) => {
     const file = e.target.files[0];
 
-    const uploadPhoto = await uploadFile(file);
-    setData((preve) => {
-      return {
-        ...preve,
-        profilePic: uploadPhoto?.url,
+    if (file) {
+      const formData = new FormData();
+      formData.append("profile-image", file);
+      const res = await apiClient.post(ADD_PROFILE_IMG_ROUTE, formData, {
+        withCredentials: true,
+      });
+
+      if (res.status === 200 && res.data.image) {
+        setUserInfo({ ...userInfo, image: res.data.image });
+        toast.success("Image updated successfully 🚀🚀", {
+          classNames: {
+            toast: "group-[.toaster]:bg-green-500 group-[.toaster]:text-white",
+            closeButton: "group-[.toaster]:bg-primary",
+          },
+        });
+      }
+      console.log(res);
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImage(reader.result);
       };
-    });
+      reader.readAsDataURL(file);
+    }
   };
 
-  const handleDeleteImg = async () => {};
+  const handleDeleteImg = async () => {
+    try {
+      const res = await apiClient.delete(REMOVE_PROFILE_IMG_ROUTE, {
+        withCredentials: true,
+      });
+      if (res.status === 200 && res.data) {
+        setUserInfo({ ...userInfo, image: null });
+        toast.success("Image removed successfully 🚀🚀", {
+          classNames: {
+            toast: "group-[.toaster]:bg-green-500 group-[.toaster]:text-white",
+            closeButton: "group-[.toaster]:bg-primary",
+          },
+        });
+        setImage(null);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="h-[100vh] flex items-center justify-center flex-col">
@@ -149,11 +177,11 @@ export default function Profile() {
             onMouseLeave={() => setHoverd(false)}
           >
             <Avatar className="w-28 h-28 md:w-36 md:h-36 object-cover rounded-full overflow-hidden transition-all duration-300 ease-out">
-              {data.profilePic ? (
+              {image ? (
                 <AvatarImage
-                  src={data.profilePic}
+                  src={image}
                   alt="profile"
-                  className="object-cover w-full h-full bg-black"
+                  className="object-cover w-full h-full"
                 />
               ) : (
                 <div
@@ -161,8 +189,8 @@ export default function Profile() {
                     selectedColor
                   )}`}
                 >
-                  {data.firstName
-                    ? data.firstName.split("").shift()
+                  {firstName
+                    ? firstName.split("").shift()
                     : userInfo.email.split("").shift()}
                 </div>
               )}
@@ -170,12 +198,10 @@ export default function Profile() {
 
             {hoverd && (
               <div
-                onClick={
-                  data.profilePic ? handleDeleteImg : handleFileInputClick
-                }
+                onClick={image ? handleDeleteImg : handleFileInputClick}
                 className="absolute inset-4 sm:inset-8  md:inset-10 flex items-center justify-center bg-black/50 ring-fuchsia-50 cursor-pointer rounded-full transition-all duration-300 ease-out"
               >
-                {data.profilePic ? (
+                {image ? (
                   <FaTrash className="text-white text-3xl cursor-pointer" />
                 ) : (
                   <FaPlus className="text-white text-3xl cursor-pointer" />
@@ -206,8 +232,8 @@ export default function Profile() {
               <Input
                 placeholder="First Name"
                 type="text"
-                onChange={handleOnChange}
-                value={data.firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                value={firstName}
                 className="rounded-lg p-6 border-blue-200 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-[#4AD1F9] focus:border-transparent"
               />
             </div>{" "}
@@ -215,8 +241,8 @@ export default function Profile() {
               <Input
                 placeholder="Last Name"
                 type="text"
-                onChange={handleOnChange}
-                value={data.lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                value={lastName}
                 className="rounded-lg p-6 border-blue-200 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-[#4AD1F9] focus:border-transparent"
               />
             </div>

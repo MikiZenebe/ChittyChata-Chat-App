@@ -22,9 +22,8 @@ const userSchema = new Schema(
     lastName: {
       type: String,
     },
-    profileImg: {
+    image: {
       type: String,
-      default: "",
     },
     color: {
       type: Number,
