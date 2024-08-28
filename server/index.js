@@ -19,7 +19,7 @@ app.use(
     credentials: true,
   })
 );
-app.use("/uploads/profiles", express.static("/uploads/profiles"));
+app.use("/uploads", express.static("uploads"));
 
 app.use("/api/auth", authRoutes);
 
