@@ -1,3 +1,6 @@
+import ChatContainer from "@/components/chat";
+import ContactContainer from "@/components/chat/contact";
+import EmptyChatContainer from "@/components/chat/empty-chat";
 import { useAppStore } from "@/store";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -13,5 +16,11 @@ export default function Chat() {
       navigate("/profile");
     }
   }, [navigate, userInfo.profileSetup]);
-  return <div>Chat</div>;
+  return (
+    <div className="flex h-[100vh] text-white overflow-hidden">
+      <ContactContainer />
+      <EmptyChatContainer />
+      <ChatContainer />
+    </div>
+  );
 }
