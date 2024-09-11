@@ -1,4 +1,4 @@
-import ChatContainer from "@/components/chat";
+import ChatContainer from "@/components/chat/chat-container/index";
 import ContactContainer from "@/components/chat/contact";
 import EmptyChatContainer from "@/components/chat/empty-chat";
 import { useAppStore } from "@/store";
@@ -17,9 +17,9 @@ export default function Chat() {
     }
   }, [navigate, userInfo.profileSetup]);
   return (
-    <div className="flex h-[100vh] text-white overflow-hidden">
+    <div className="flex h-[100vh] bg-slate-200 text-white overflow-hidden gap-1.5">
       <ContactContainer />
-      <EmptyChatContainer />
+      {/* <EmptyChatContainer /> */}
       <ChatContainer />
     </div>
   );
