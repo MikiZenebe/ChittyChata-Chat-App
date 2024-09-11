@@ -67,7 +67,7 @@
     @apply bg-background text-foreground;
   }
   .btn {
-    @apply bg-gradient-to-r from-[#62E1FB] to-[#27BBF6] hover:ring-2 hover:ring-blue-300;
+    @apply bg-gradient-to-r from-[#62E1FB] to-[#27BBF6] hover:ring-2 hover:ring-blue-300 hover:bg-blue-300 focus:bg-blue-300;
   }
   .txt {
     @apply bg-gradient-to-r from-[#62E1FB] to-[#27BBF6] text-transparent bg-clip-text;
