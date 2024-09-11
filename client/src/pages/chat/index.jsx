@@ -17,7 +17,7 @@ export default function Chat() {
     }
   }, [navigate, userInfo.profileSetup]);
   return (
-    <div className="flex h-[100vh] bg-slate-200 text-white overflow-hidden gap-1.5">
+    <div className="flex h-[100vh] bg-slate-200 text-[#1b1c24] overflow-hidden gap-1.5">
       <ContactContainer />
       {/* <EmptyChatContainer /> */}
       <ChatContainer />

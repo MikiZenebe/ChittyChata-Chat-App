@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import logo from "@/assets/coffee-chat.png";
+import ProfileInfo from "./profile-info";
 
 export default function ContactContainer() {
   return (
@@ -20,6 +21,8 @@ export default function ContactContainer() {
           <Title text="Channels" />
         </div>
       </div>
+
+      <ProfileInfo />
     </div>
   );
 }
