@@ -29,17 +29,17 @@ export default function MessageBar() {
   const handleSendMessage = async () => {};
 
   return (
-    <div className="h-[10vh]  flex justify-center items-center px-8 mb-6 gap-6">
+    <div className="h-[10vh]  flex justify-center items-center px-8 mb-6 gap-1">
       <div className="flex-1 flex bg-slate-50 rounded-md items-center gap-5 pr-5">
         <input
           type="text"
-          className="flex-1 p-5 bg-transparent rounded-md focus:border-none focus:outline-none"
+          className="flex-1 py-3 px-5 bg-transparent rounded-md focus:border-none focus:outline-none"
           placeholder="Enter Message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
         <button className="text-neutral-500 focus:border-none focus:outline-none focus:text-[#1b1c24] duration-300 transition-all">
-          <GrAttachment className="text-2xl" />
+          <GrAttachment className="text-xl" />
         </button>
 
         <div className="relative">
@@ -47,7 +47,7 @@ export default function MessageBar() {
             className="text-neutral-500 focus:border-none focus:outline-none focus:text-[#1b1c24] duration-300 transition-all"
             onClick={() => setEmojiPickerOpen(true)}
           >
-            <RiEmojiStickerLine className="text-2xl" />
+            <RiEmojiStickerLine className="text-xl" />
           </button>
           <div className="absolute bottom-16 right-8" ref={emojiRef}>
             <EmojiPicker
@@ -60,10 +60,10 @@ export default function MessageBar() {
         </div>
       </div>
       <button
-        className="btn rounded-md flex items-center justify-center p-5 focus:border-none focus:outline-none focus:text-white duration-300 transition-all"
+        className="btn rounded-md flex items-center justify-center py-3 px-3 focus:border-none focus:outline-none focus:text-white duration-300 transition-all"
         onClick={handleSendMessage}
       >
-        <IoSend className="text-2xl" />
+        <IoSend className="text-xl" />
       </button>
     </div>
   );

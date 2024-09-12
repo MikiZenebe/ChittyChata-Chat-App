@@ -165,7 +165,7 @@ export default function Profile() {
             onClick={handleNav}
             className="text-4xl text-slate-400 cursor-pointer "
           />
-          <h3 className="text-center mx-auto text-2xl font-bold bg-gradient-to-r from-[#62E1FB] to-[#27BBF6] inline-block text-transparent bg-clip-text">
+          <h3 className="text-center mx-auto text-2xl font-bold txt">
             Setup Profile
           </h3>
         </div>
