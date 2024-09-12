@@ -5,18 +5,46 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { apiClient } from "@/lib/api-client";
 import { getColor } from "@/lib/utils";
 import { useAppStore } from "@/store";
-import { HOST } from "@/utils/constants";
+import { HOST, LOGOUT_ROUTE } from "@/utils/constants";
 import { FiEdit2 } from "react-icons/fi";
 import { IoPowerSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function ProfileInfo() {
-  const { userInfo } = useAppStore();
+  const { userInfo, setUserInfo } = useAppStore();
   const navigate = useNavigate();
 
-  const logOut = async () => {};
+  const logOut = async () => {
+    try {
+      const res = await apiClient.post(
+        LOGOUT_ROUTE,
+        {},
+        { withCredentials: true }
+      );
+
+      if (res.status === 200) {
+        toast.success("Logout successfully 🚀🚀", {
+          classNames: {
+            toast: "group-[.toaster]:bg-green-500 group-[.toaster]:text-white",
+            closeButton: "group-[.toaster]:bg-primary",
+          },
+        });
+        navigate("/auth");
+        setUserInfo(null);
+      }
+    } catch (error) {
+      toast.error(error, {
+        classNames: {
+          toast: "group-[.toaster]:bg-red-500 group-[.toaster]:text-white",
+          closeButton: "group-[.toaster]:bg-primary",
+        },
+      });
+    }
+  };
 
   return (
     <div className="absolute bottom-0 h-16 flex items-center justify-between px-6 w-full bg-slate-50 gap-1">

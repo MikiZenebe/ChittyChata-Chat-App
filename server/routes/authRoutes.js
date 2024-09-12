@@ -3,6 +3,7 @@ import {
   addProfileImg,
   getUser,
   login,
+  logout,
   removeProfileImg,
   signup,
   updateProfile,
@@ -25,5 +26,6 @@ router.post(
   addProfileImg
 );
 router.delete("/remove-profile-img", verifyToken, removeProfileImg);
+router.post("/logout", logout);
 
 export default router;
