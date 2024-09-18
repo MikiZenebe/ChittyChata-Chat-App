@@ -21,6 +21,7 @@ export default function Profile() {
   const [hoverd, setHoverd] = useState(false);
   const [selectedColor, setSelectedColor] = useState(0);
   const { userInfo, setUserInfo } = useAppStore();
+  const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [image, setImage] = useState(null);
@@ -28,6 +29,7 @@ export default function Profile() {
 
   useEffect(() => {
     if (userInfo.profileSetup) {
+      setUsername(userInfo.username);
       setFirstName(userInfo.firstName);
       setLastName(userInfo.lastName);
       setSelectedColor(userInfo.color);
@@ -41,6 +43,15 @@ export default function Profile() {
   }, [userInfo]);
 
   const validateProfile = () => {
+    if (!username) {
+      toast.error("username is required", {
+        classNames: {
+          toast: "group-[.toaster]:bg-red-500 group-[.toaster]:text-white",
+          closeButton: "group-[.toaster]:bg-primary",
+        },
+      });
+      return false;
+    }
     if (!firstName) {
       toast.error("Firstname is required", {
         classNames: {
@@ -69,7 +80,7 @@ export default function Profile() {
       try {
         const res = await apiClient.post(
           UPDATE_PROFILE_ROUTE,
-          { firstName, lastName, color: selectedColor },
+          { username, firstName, lastName, color: selectedColor },
           {
             withCredentials: true,
           }
@@ -228,6 +239,15 @@ export default function Profile() {
                 className="rounded-lg p-6 border-blue-200 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-[#4AD1F9] focus:border-transparent"
               />
             </div>
+            <div className="w-full">
+              <Input
+                placeholder="Username"
+                type="text"
+                onChange={(e) => setUsername(e.target.value)}
+                value={username}
+                className="rounded-lg p-6 border-blue-200 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-[#4AD1F9] focus:border-transparent"
+              />
+            </div>{" "}
             <div className="w-full">
               <Input
                 placeholder="First Name"

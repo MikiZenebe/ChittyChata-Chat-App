@@ -72,13 +72,14 @@ export const getUser = async (req, res, next) => {
 export const updateProfile = async (req, res, next) => {
   try {
     const { userId } = req;
-    const { firstName, lastName, color } = req.body;
+    const { username, firstName, lastName, color } = req.body;
     if (!firstName || !lastName) {
       return res.status(404).send("Firstname, lastname & color is required");
     }
     const userData = await User.findByIdAndUpdate(
       userId,
       {
+        username,
         firstName,
         lastName,
         color,
