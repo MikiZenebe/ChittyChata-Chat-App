@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import logo from "@/assets/chat.png";
 import ProfileInfo from "./profile-info";
+import NewDM from "./new-dm";
 
 export default function ContactContainer() {
   return (
@@ -14,6 +15,7 @@ export default function ContactContainer() {
       <div className="my-5">
         <div className="flex items-center justify-between pr-10">
           <Title text="Direct Message" />
+          <NewDM />
         </div>
       </div>
 
