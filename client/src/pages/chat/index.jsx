@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function Chat() {
-  const { userInfo } = useAppStore();
+  const { userInfo, selectedChatType } = useAppStore();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,8 +19,12 @@ export default function Chat() {
   return (
     <div className="flex h-[100vh] bg-slate-200 text-[#1b1c24] overflow-hidden gap-1.5">
       <ContactContainer />
-      {/* <EmptyChatContainer /> */}
-      <ChatContainer />
+
+      {selectedChatType === undefined ? (
+        <EmptyChatContainer />
+      ) : (
+        <ChatContainer />
+      )}
     </div>
   );
 }

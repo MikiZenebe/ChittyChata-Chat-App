@@ -16,12 +16,14 @@ import {
 } from "@/components/ui/tooltip";
 import { apiClient } from "@/lib/api-client";
 import { animationDefaultOption, getColor } from "@/lib/utils";
+import { useAppStore } from "@/store";
 import { HOST, SEARCH_CONTACTS_ROUTES } from "@/utils/constants";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import Lottie from "react-lottie";
 
 export default function NewDM() {
+  const { setSelectedChatType, setSelectedChatData } = useAppStore();
   const [openNewContactModal, setOpenNewContactModal] = useState(false);
   const [searchedContact, setSearchedContact] = useState([]);
 
@@ -43,6 +45,13 @@ export default function NewDM() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const selectNewContact = (contact) => {
+    setOpenNewContactModal(false);
+    setSelectedChatType("contact");
+    setSelectedChatData(contact);
+    setSearchedContact([]);
   };
 
   return (
@@ -78,52 +87,55 @@ export default function NewDM() {
             />
           </div>
 
-          <ScrollArea className="h-[250px]">
-            <div className="flex flex-col gap-5">
-              {searchedContact.map((contact) => {
-                return (
-                  <div
-                    key={contact._id}
-                    className="flex gap-3 items-center cursor-pointer"
-                  >
-                    <div className="w-10 h-10 relative ">
-                      <Avatar className="w-10 h-10  object-cover rounded-full overflow-hidden transition-all duration-300 ease-out">
-                        {contact.image ? (
-                          <AvatarImage
-                            src={`${HOST}/${contact.image}`}
-                            alt="profile"
-                            className="object-cover w-full h-full"
-                          />
-                        ) : (
-                          <div
-                            className={`uppercase h-10 w-10 text-lg border-[1px] flex items-center justify-center rounded-full ${getColor(
-                              contact.color
-                            )}`}
-                          >
-                            {contact.firstName
-                              ? contact.firstName.split("").shift()
-                              : contact.email.split("").shift()}
-                            <span></span>
-                          </div>
-                        )}
-                      </Avatar>
-                    </div>
-                    <div className="flex flex-col">
-                      <span>
-                        {contact.firstName && contact.lastName
-                          ? `${contact.firstName} ${contact.lastName}`
-                          : contact.email}{" "}
-                        <span className="text-xs text-slate-400">
-                          @{contact.username}
+          {searchedContact.length > 0 && (
+            <ScrollArea className="h-[250px]">
+              <div className="flex flex-col gap-5">
+                {searchedContact.map((contact) => {
+                  return (
+                    <div
+                      key={contact._id}
+                      className="flex gap-3 items-center cursor-pointer"
+                      onClick={() => selectNewContact(contact)}
+                    >
+                      <div className="w-10 h-10 relative ">
+                        <Avatar className="w-10 h-10  object-cover rounded-full overflow-hidden transition-all duration-300 ease-out">
+                          {contact.image ? (
+                            <AvatarImage
+                              src={`${HOST}/${contact.image}`}
+                              alt="profile"
+                              className="object-cover w-full h-full"
+                            />
+                          ) : (
+                            <div
+                              className={`uppercase h-10 w-10 text-lg border-[1px] flex items-center justify-center rounded-full ${getColor(
+                                contact.color
+                              )}`}
+                            >
+                              {contact.firstName
+                                ? contact.firstName.split("").shift()
+                                : contact.email.split("").shift()}
+                              <span></span>
+                            </div>
+                          )}
+                        </Avatar>
+                      </div>
+                      <div className="flex flex-col">
+                        <span>
+                          {contact.firstName && contact.lastName
+                            ? `${contact.firstName} ${contact.lastName}`
+                            : contact.email}{" "}
+                          <span className="text-xs text-slate-400">
+                            @{contact.username}
+                          </span>
                         </span>
-                      </span>
-                      <span className="text-xs">{contact.email}</span>
+                        <span className="text-xs">{contact.email}</span>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          </ScrollArea>
+                  );
+                })}
+              </div>
+            </ScrollArea>
+          )}
 
           {searchedContact.length <= 0 && (
             <div className="flex-1 md:bg-white md:flex mt-5 flex-col justify-center items-center duration-1000 transition-all rounded-md my-2">
