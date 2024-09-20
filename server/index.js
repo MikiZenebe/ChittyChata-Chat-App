@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import connectDB from "./db/connectDB.js";
 import authRoutes from "./routes/authRoutes.js";
 import contactRoutes from "./routes/contactRoute.js";
+import setupSocket from "./socket.js";
 
 dotenv.config();
 
@@ -29,3 +30,5 @@ const server = app.listen(port, () => {
   console.log(`Server is running at port ${port}`);
   connectDB();
 });
+
+setupSocket(server);
