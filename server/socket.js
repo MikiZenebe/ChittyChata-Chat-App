@@ -9,7 +9,7 @@ const setupSocket = (server) => {
     },
   });
 
-  const userSocketMap = Map();
+  const userSocketMap = new Map();
 
   const disconnect = (socket) => {
     console.log(`Client disconnected: ${socket.id}`);
