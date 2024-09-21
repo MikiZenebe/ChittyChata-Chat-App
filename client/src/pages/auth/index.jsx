@@ -137,7 +137,7 @@ export default function Auth() {
                 <Input
                   placeholder="Email"
                   type="email"
-                  className="rounded-full p-6 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-[#4AD1F9] focus:border-transparent"
+                  className="input"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -145,15 +145,12 @@ export default function Auth() {
                 <Input
                   placeholder="Password"
                   type="password"
-                  className="rounded-full p-6 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-[#4AD1F9] focus:border-transparent"
+                  className="input"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
 
-                <Button
-                  onClick={handleLogin}
-                  className="rounded-full p-6 btn transition-all duration-300 ease-out"
-                >
+                <Button onClick={handleLogin} className="btn">
                   Login
                 </Button>
               </TabsContent>
@@ -161,7 +158,7 @@ export default function Auth() {
                 <Input
                   placeholder="Email"
                   type="email"
-                  className="rounded-full p-6 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-[#4AD1F9] focus:border-transparent"
+                  className="input"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -169,22 +166,19 @@ export default function Auth() {
                 <Input
                   placeholder="Password"
                   type="password"
-                  className="rounded-full p-6 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-[#4AD1F9] focus:border-transparent"
+                  className="input"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <Input
                   placeholder="Confirm Password"
                   type="password"
-                  className="rounded-full p-6 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-[#4AD1F9] focus:border-transparent"
+                  className="input"
                   value={confirmPass}
                   onChange={(e) => setConfirmPass(e.target.value)}
                 />
 
-                <Button
-                  onClick={handleSignup}
-                  className="rounded-full p-6 btn transition-all duration-300 ease-out"
-                >
+                <Button onClick={handleSignup} className="btn">
                   Signup
                 </Button>
               </TabsContent>
