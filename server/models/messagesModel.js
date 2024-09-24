@@ -7,13 +7,13 @@ const messageSchema = new Schema({
     required: true,
   },
 
-  reciever: {
+  receiver: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Users",
     required: false,
   },
 
-  message: {
+  messageType: {
     type: String,
     enum: ["text", "file"],
     required: true,
@@ -22,18 +22,18 @@ const messageSchema = new Schema({
   content: {
     type: String,
     required: function () {
-      return this.message === "text";
+      return this.messageType === "text";
     },
   },
 
   fileUrl: {
     type: String,
     required: function () {
-      return this.message === "file";
+      return this.messageType === "file";
     },
   },
 
-  date: {
+  timestamp: {
     type: Date,
     default: Date.now,
   },

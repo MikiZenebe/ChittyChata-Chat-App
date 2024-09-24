@@ -1,3 +1,5 @@
+import { useSocket } from "@/context/SocketContext";
+import { useAppStore } from "@/store";
 import EmojiPicker from "emoji-picker-react";
 import { useEffect } from "react";
 import { useRef, useState } from "react";
@@ -9,6 +11,8 @@ export default function MessageBar() {
   const emojiRef = useRef();
   const [message, setMessage] = useState("");
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
+  const { selectedChatType, selectedChatData, userInfo } = useAppStore();
+  const socket = useSocket();
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -26,7 +30,17 @@ export default function MessageBar() {
     setMessage((msg) => msg + emoji.emoji);
   };
 
-  const handleSendMessage = async () => {};
+  const handleSendMessage = async () => {
+    if (selectedChatType === "contact") {
+      socket.emit("sendMessage", {
+        sender: userInfo._id,
+        content: message,
+        receiver: selectedChatData._id,
+        messageType: "text",
+        fileUrl: undefined,
+      });
+    }
+  };
 
   return (
     <div className="h-[10vh]  flex justify-center items-center px-8 mb-6 gap-1">
