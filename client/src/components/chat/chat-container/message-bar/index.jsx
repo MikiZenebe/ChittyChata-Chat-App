@@ -40,6 +40,8 @@ export default function MessageBar() {
         fileUrl: undefined,
       });
     }
+
+    setMessage("");
   };
 
   return (

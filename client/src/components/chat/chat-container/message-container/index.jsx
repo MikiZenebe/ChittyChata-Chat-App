@@ -53,7 +53,7 @@ export default function MessageContainer() {
       return (
         <div key={i}>
           {showDate && (
-            <div className="text-center text-gray-500 my-2">
+            <div className="text-center text-[10px] bg-slate-600 w-fit mx-auto p-2 rounded-full text-gray-200 my-2">
               {moment(msg.timestamp).format("LL")}
             </div>
           )}
@@ -74,9 +74,9 @@ export default function MessageContainer() {
           <div
             className={`${
               msg.sender !== selectedChatData._id
-                ? "bg-[#8407ff]/5 text-[#8407ff] border-[#8407ff]/5"
-                : "bg-[#2a2b33]/5 text-gray border-gray"
-            } border inline-block p-4 rounded my-1 max-w-[50%] break-words`}
+                ? "sender rounded-br-none"
+                : "receiver rounded-bl-none"
+            } px-3.5 py-2 my-1 rounded-3xl justify-center items-center gap-3 inline-block max-w-[50%] break-words`}
           >
             {msg.content}
           </div>
@@ -90,7 +90,7 @@ export default function MessageContainer() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto scrollbar-hidden p-4 px-8 md:w-[65vw] lg:w-[70vw] xl:w-[80vw] w-full">
+    <div className="flex-1 overflow-y-auto scrollbar-hidden p-4 px-8 md:w-[65vw] lg:w-[70vw] xl:w-[80vw] w-full bg">
       {renderMessages()}
       <div ref={scrollRef} />
     </div>

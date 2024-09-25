@@ -74,6 +74,13 @@
   .input {
     @apply rounded-2xl p-6 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-[#4AD1F9] focus:border-transparent;
   }
+
+  .sender {
+    @apply bg-gradient-to-r from-[#62E1FB] to-[#2ABDF6]  transition-all duration-300 ease-out;
+  }
+  .receiver {
+    @apply bg-gradient-to-r from-[#86E6B6] to-[#64D4A5]  transition-all duration-300 ease-out;
+  }
 }
 
 body {
