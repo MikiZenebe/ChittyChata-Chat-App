@@ -9,13 +9,13 @@ export const getMessage = async (req, res) => {
       return res.status(400).send("Both user Id's are required.");
     }
 
-    const message = await Message.find({
+    const messages = await Message.find({
       $or: [
         { sender: user1, receiver: user2 },
         { sender: user2, receiver: user1 },
       ],
     }).sort({ timestamp: 1 });
 
-    return res.status(200).json(message);
+    return res.status(200).json({ messages });
   } catch (error) {}
 };
