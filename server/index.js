@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import connectDB from "./db/connectDB.js";
 import authRoutes from "./routes/authRoutes.js";
 import contactRoutes from "./routes/contactRoute.js";
+import messageRoutes from "./routes/messageRoutes.js";
 import setupSocket from "./socket.js";
 
 dotenv.config();
@@ -25,6 +26,7 @@ app.use("/uploads", express.static("uploads"));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/contacts", contactRoutes);
+app.use("/api/messages", messageRoutes);
 
 const server = app.listen(port, () => {
   console.log(`Server is running at port ${port}`);
