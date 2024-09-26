@@ -2,8 +2,22 @@
 import logo from "@/assets/chat.png";
 import ProfileInfo from "./profile-info";
 import NewDM from "./new-dm";
+import { useEffect } from "react";
+import { apiClient } from "@/lib/api-client";
+import { GET_DM_CONTACT_ROUTES } from "@/utils/constants";
 
 export default function ContactContainer() {
+  useEffect(() => {
+    const getContacts = async () => {
+      const res = await apiClient.get(GET_DM_CONTACT_ROUTES, {
+        withCredentials: true,
+      });
+      if (res.data.contacts) {
+        console.log(res.data.contacts);
+      }
+    };
+    getContacts();
+  }, []);
   return (
     <div className="relative md:w-[35vw] lg:w-[30vw] xl:w-[20vw] bg-white rounded-md rounded-br-none mt-2 ml-2 w-full">
       <div className="pt-3 px-5  flex items-center gap-3">
