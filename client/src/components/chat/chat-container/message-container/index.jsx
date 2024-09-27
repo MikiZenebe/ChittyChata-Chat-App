@@ -76,7 +76,7 @@ export default function MessageContainer() {
               msg.sender !== selectedChatData._id
                 ? "sender rounded-br-none"
                 : "receiver rounded-bl-none"
-            } px-3.5 py-2 my-1 rounded-3xl justify-center items-center gap-3 inline-block max-w-[50%] break-words`}
+            } px-3.5 py-2 my-1 rounded-xl justify-center items-center gap-3 inline-block max-w-[50%] break-words`}
           >
             {msg.content}
           </div>
