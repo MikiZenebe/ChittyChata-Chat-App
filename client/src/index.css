@@ -63,23 +63,23 @@
 
 @layer components {
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground transition-all duration-300 ease-out;
   }
   .btn {
-    @apply bg-gradient-to-r from-[#62E1FB] to-[#8AE9B8] hover:from-[#2caac4] hover:to-[#3ec780] transition-all duration-300 ease-out hover:text-white;
+    @apply bg-[linear-gradient(to_right,#62E1FB,#64D4A5)] [background-size:200%] hover:bg-[linear-gradient(to_right,#62E1FB,#64D4A5,#62E1FB)] transition-all duration-300 hover:text-white;
   }
   .txt {
-    @apply bg-gradient-to-r from-[#62E1FB] to-[#8AE9B8] text-transparent bg-clip-text;
+    @apply bg-[linear-gradient(to_right,#62E1FB,#64D4A5)] [background-size:200%] text-transparent bg-clip-text;
   }
   .input {
     @apply rounded-2xl p-6 transition-all duration-300 ease-out outline-none focus:outline-none focus:ring-2 focus:ring-[#4AD1F9] focus:border-transparent;
   }
 
   .sender {
-    @apply bg-gradient-to-r from-[#62E1FB] to-[#2ABDF6]  transition-all duration-300 ease-out;
+    @apply bg-[linear-gradient(to_right,#62E1FB,#2ABDF6)] [background-size:200%] transition-all duration-300 ease-out;
   }
   .receiver {
-    @apply bg-gradient-to-r from-[#86E6B6] to-[#64D4A5]  transition-all duration-300 ease-out;
+    @apply bg-[linear-gradient(to_right,#86E6B6,#64D4A5)] [background-size:200%] transition-all duration-300 ease-out;
   }
 }
 
