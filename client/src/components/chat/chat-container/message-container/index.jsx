@@ -43,6 +43,13 @@ export default function MessageContainer() {
     }
   }, [selectedChatMessages]);
 
+  const checkIfImg = (filePath) => {
+    const imgRegex =
+      /\.(jpg|jpeg|png|gif|bmp|tiff|tif|webp|svg|ico|heic|heif)$/i;
+
+    return imgRegex.test(filePath);
+  };
+
   const renderMessages = () => {
     let lastDate = null;
     return selectedChatMessages.map((msg, i) => {
