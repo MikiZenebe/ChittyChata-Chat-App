@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useAppStore } from "@/store";
 import moment from "moment";
 import { apiClient } from "@/lib/api-client";
-import { GET_ALL_MESSAGES_ROUTES } from "@/utils/constants";
+import { GET_ALL_MESSAGES_ROUTES, HOST } from "@/utils/constants";
 
 export default function MessageContainer() {
   const scrollRef = useRef();
@@ -86,6 +86,29 @@ export default function MessageContainer() {
             } px-3.5 py-2 my-1 rounded-xl justify-center items-center gap-3 inline-block max-w-[50%] break-words`}
           >
             {msg.content}
+          </div>
+        )}
+
+        {msg.messageType === "file" && (
+          <div
+            className={`${
+              msg.sender !== selectedChatData._id
+                ? "sender rounded-br-none"
+                : "receiver rounded-bl-none"
+            } px-3.5 py-2 my-1 rounded-xl justify-center items-center gap-3 inline-block max-w-[50%] break-words`}
+          >
+            {checkIfImg(msg.fileUrl) ? (
+              <div className="cursor-pointer">
+                <img
+                  src={`${HOST}/${msg.fileUrl}`}
+                  width={300}
+                  height={300}
+                  alt=""
+                />
+              </div>
+            ) : (
+              <div></div>
+            )}
           </div>
         )}
 

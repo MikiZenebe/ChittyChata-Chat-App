@@ -23,7 +23,7 @@ app.use(
   })
 );
 app.use("/uploads", express.static("uploads"));
-app.use("/uploads/files", express.static("uploads/files"));
+app.use("/uploads", express.static("uploads"));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/contacts", contactRoutes);
